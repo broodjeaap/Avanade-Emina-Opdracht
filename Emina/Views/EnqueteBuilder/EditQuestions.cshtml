@@ -28,7 +28,7 @@
             </th>
         </tr>
         @{
-            var count = 0;   
+            var count = 1;   
         }
         @foreach (var question in Model.Questions)
         {
@@ -36,9 +36,10 @@
             var Type = "Question_" + count + "_Type";
             var Next = "Question_" + count + "_Next";
             var Number = "Question_" + count + "_Number";
-            count++;
-            <tr>
-                <td>
+            var Row = "Question_" + count + "_Row";
+            
+            <tr id="@Row">
+                <td id="@Number">
                     @question.QuestionNumber
                 </td>
                 <td>
@@ -48,26 +49,41 @@
                     <select id="@Type" name="@Type">
                             @foreach (var QuestionType in ViewBag.QuestionTypes)
                             {
-                                <option>
-                                    @QuestionType
-                                </option>
+                                if (question.Type == QuestionType)
+                                {
+                                    <option selected="selected" value="@QuestionType">
+                                        @QuestionType
+                                    </option>
+                                }
+                                else 
+                                {  
+                                    <option value="@QuestionType">
+                                        @QuestionType
+                                    </option>
+                                }
                             }
                     </select>
                 </td>
                 <td>
                     <select id="@Next" name="@Next">
-                            <option>
+                            <option value="null">
                                 None
                             </option>
                             @foreach (var q in Model.Questions.Where(quest => quest.QuestionID != question.QuestionID))
                             {
-                                <option>
+                                <option value="@q.QuestionID">
                                     @q.QuestionNumber
                                 </option>
                             }
                     </select>
                 </td>
+                <td>
+                    <a href="javascript:deleteRow(@count)">
+                        Delete
+                    </a>
+                </td>
             </tr>
+            count++;
         }
         <tr id="addQuestionRow">
             <td>
@@ -79,13 +95,13 @@
             </td>
         </tr>
     </table>
+    <input type="hidden" value="0" id="questionCount" name="questionCount" />
 }
 
 <script type="text/javascript">
-
-    var questions = new Array();
     var questionTypes = ["Open", "MultipleChoice", "Checkbox", "Stars", "Grade", "Binary", "FuzzyBinary"];
-    var questionCount = 0;
+    var questionCount = 1;
+    var questions = new Array();
 
     $(document).ready(function () {
         @foreach(var question in Model.Questions){
@@ -94,6 +110,7 @@
             "       tmp.text = \""+question.Text+"\";\n"+
             "       tmp.type = \""+question.Type+"\";\n"
             );
+
             if (question.NextQuestion != null)
             {
                 @Html.Raw("       tmp.next = " + question.NextQuestion.QuestionID+";\n")
@@ -105,25 +122,42 @@
                 @Html.Raw("       tmp.next = null;\n");
                 @Html.Raw("       $(\"#Question_\" + questionCount + \"_Type\").val(\"None\");\n");
             }
-            @Html.Raw("       questions[questionCount] = tmp;\n");
-            @Html.Raw("       questionCount++;\n");
+            @Html.Raw("       questions[questionCount++] = tmp;\n");
         }
+        $("#questionCount").val(questionCount);
     });
 
     function addQuestionRow() {
-        var row = "<tr><td>" + questionCount + "</td><td><input id=\"Question_" + questionCount + "_Text\" type=\"text\" value=\"\" name=\"Question_" + questionCount + "_Text\"></td><td><select id=\"Question_" + questionCount + "_Type\" name=\"Question_" + questionCount + "_Type\"><option> Open </option><option> MultipleChoice </option><option> Checkbox </option><option> Stars </option><option> Grade </option><option> Binary </option><option> FuzzyBinary </option></select></td><td><select id=\"Question_" + questionCount + "_Next\" name=\"Question_" + questionCount + "_Next\"><option>None</option>";
-        for (a = 0; a < questions.length; ++a) {
-            row += "<option>" + questions[a].nextNumber + "</option>";
-            //$("#Question_" + a + "_Next").add(questions[a].nextNumber);
+        var row = "<tr id=\"Question_" + questionCount + "_Row\"><td id=\"Question_" + questionCount + "_Number\">" + questionCount + "</td><td><input id=\"Question_" + questionCount + "_Text\" type=\"text\" value=\"\" name=\"Question_" + questionCount + "_Text\"></td><td><select id=\"Question_" + questionCount + "_Type\" name=\"Question_" + questionCount + "_Type\"><option> Open </option><option> MultipleChoice </option><option> Checkbox </option><option> Stars </option><option> Grade </option><option> Binary </option><option> FuzzyBinary </option></select></td><td><select id=\"Question_" + questionCount + "_Next\" name=\"Question_" + questionCount + "_Next\"><option>None</option>";
+        for (a = 0; a < questionCount-1; ++a) {
+            row += "<option>" + (a + 1) + "</option>";
         }
-        row += "</select></td></tr>";
+        for (a = 1; a < questions.length; ++a) {
+            $("#Question_" + a + "_Next").append("<option value=\""+questionCount+"\">" + questionCount + "</option>");
+        }
+        row += "</select></td><td><a href=\"javascript:deleteRow("+questionCount+")\">Delete</a></td></tr>";
         $("#addQuestionRow").before(row);
+        
         var tmp = new Object();
         tmp.text = "";
         tmp.type = "Open";
         tmp.next = null;
         questions[questionCount++] = tmp;
+        $("#questionCount").val(questionCount);
+    }
 
+    function deleteRow(number) {
+        $("#Question_" + number + "_Row").remove();
+        if (number != questionCount - 1) {
+            for (a = number; a < questionCount - 1; ++a) {
+                alert(a + " becomes " + (a + 1));
+                questions[a] = questions[a + 1];
+            }
+        } else {
+            
+        }
+        questionCount--;
+        $("#questionCount").val(questionCount);
     }
 
 </script>
