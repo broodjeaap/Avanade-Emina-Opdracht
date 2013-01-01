@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Express 2012 for Web
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Emina", "Emina\Emina.csproj", "{5FBF3CB4-FB45-45DF-9843-BF0D2DE46B6B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5FBF3CB4-FB45-45DF-9843-BF0D2DE46B6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FBF3CB4-FB45-45DF-9843-BF0D2DE46B6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FBF3CB4-FB45-45DF-9843-BF0D2DE46B6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FBF3CB4-FB45-45DF-9843-BF0D2DE46B6B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

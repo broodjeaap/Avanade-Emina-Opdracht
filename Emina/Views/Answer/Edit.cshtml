@@ -1,0 +1,53 @@
+﻿@model Emina.Models.Answer
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+@using (Html.BeginForm()) {
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>Answer</legend>
+
+        @Html.HiddenFor(model => model.AnswerID)
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.EnqueteID, "Enquete")
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("EnqueteID", String.Empty)
+            @Html.ValidationMessageFor(model => model.EnqueteID)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.QuestionID, "Question")
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("QuestionID", String.Empty)
+            @Html.ValidationMessageFor(model => model.QuestionID)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.PossibleAnswerID, "PossibleAnswer")
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("PossibleAnswerID", String.Empty)
+            @Html.ValidationMessageFor(model => model.PossibleAnswerID)
+        </div>
+
+        <p>
+            <input type="submit" value="Save" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

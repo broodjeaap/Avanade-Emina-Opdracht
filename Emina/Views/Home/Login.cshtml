@@ -1,0 +1,38 @@
+﻿@model Emina.Models.LoginModel
+@{
+    ViewBag.Title = "Login";
+}
+
+<h2>Login</h2>
+@using (Html.BeginForm("Question", "TakeEnquete")) 
+{
+    <table>
+        <tr>
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+            <td>
+                @Html.LabelFor(m => Model.Email)
+            </td>
+            <td>
+                @Html.TextBoxFor(m => Model.Email)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.LabelFor(m => Model.Password)
+            </td>
+            <td>
+                @Html.PasswordFor(m => Model.Password)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="submit" value="Login" />
+            </td>
+            <td>
+                @Html.CheckBoxFor(m => m.RememberMe)
+                @Html.LabelFor(m => m.RememberMe, new { @class = "checkbox" })
+            </td>
+        </tr>
+    </table>
+}

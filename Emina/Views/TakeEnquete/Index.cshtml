@@ -1,0 +1,48 @@
+﻿@model IEnumerable<Emina.Models.Enquete>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<table>
+    <caption>
+        Enquetes you can take:
+    </caption>
+    <tr>
+        <th>
+            Title:
+        </th>
+        <th>
+            Description:
+        </th>
+        <th>
+            Questions
+        </th>
+        <th>
+            Go
+        </th>
+    </tr>
+    @foreach (var e in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => e.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => e.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => e.Questions.Count)
+            </td>
+            <td>
+                @using (Html.BeginForm("Question", "TakeEnquete")) 
+                {
+                    @Html.ValidationSummary(true)
+                    @Html.HiddenFor(model => e.Questions.First().EnqueteID) //yeah...
+                    @Html.HiddenFor(model => e.Questions.First().QuestionID)
+                    <input type="submit" value="Start" />
+                }
+            </td>
+        </tr>
+    }
+</table>

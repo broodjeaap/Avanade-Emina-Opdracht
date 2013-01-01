@@ -1,0 +1,29 @@
+﻿@model Emina.Models.PossibleAnswer
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>PossibleAnswer</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Question.Text)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Question.Text)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Text)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Text)
+    </div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.PossibleAnswerID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
