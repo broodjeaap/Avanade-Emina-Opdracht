@@ -131,6 +131,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AnswerController.cs" />
+    <Compile Include="Controllers\EnqueteBuilderController.cs" />
     <Compile Include="Controllers\EnqueteController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InitializeSimpleMembership.cs" />
@@ -269,6 +270,10 @@
     <Content Include="Views\TakeEnquete\GradeQuestion.cshtml" />
     <Content Include="Views\TakeEnquete\BinaryQuestion.cshtml" />
     <Content Include="Views\TakeEnquete\FuzzyBinaryQuestion.cshtml" />
+    <Content Include="Views\EnqueteBuilder\Index.cshtml" />
+    <Content Include="Views\EnqueteBuilder\NewEnquete.cshtml" />
+    <Content Include="Views\EnqueteBuilder\EditEnquete.cshtml" />
+    <Content Include="Views\EnqueteBuilder\EditQuestions.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

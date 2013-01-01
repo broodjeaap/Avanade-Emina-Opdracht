@@ -1,0 +1,125 @@
+﻿@model Emina.Models.Enquete
+
+@{
+    ViewBag.Title = "Edit Questions";
+}
+
+
+
+<h2>Edit Questions</h2>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js" type="text/javascript"></script>
+@using (Html.BeginForm("ParseQuestionsEdit", "EnqueteBuilder", FormMethod.Post)) {
+    <table id="QuestionTable">
+        <tr>
+            <th>
+                #
+            </th>
+            <th>
+                Question Text
+            </th>
+            <th>
+                Question Type
+            </th>
+            <th>
+                Default Next Question
+            </th>
+            <th>
+
+            </th>
+        </tr>
+        @{
+            var count = 0;   
+        }
+        @foreach (var question in Model.Questions)
+        {
+            var Text = "Question_" + count + "_Text";
+            var Type = "Question_" + count + "_Type";
+            var Next = "Question_" + count + "_Next";
+            <tr>
+                <td>
+                    @question.QuestionNumber
+                </td>
+                <td>
+                    <input type="text" name="@Text" id="@Text" value="@question.Text"/>
+                </td>
+                <td>
+                    <select id="@Type" name="@Type">
+                            @foreach (var QuestionType in ViewBag.QuestionTypes)
+                            {
+                                <option>
+                                    @QuestionType
+                                </option>
+                            }
+                    </select>
+                </td>
+                <td>
+                    <select id="@Next" name="@Next">
+                            <option>
+                                None
+                            </option>
+                            @foreach (var q in Model.Questions.Where(quest => quest.QuestionID != question.QuestionID))
+                            {
+                                <option>
+                                    @q.QuestionNumber
+                                </option>
+                            }
+                    </select>
+                </td>
+            </tr>
+        }
+        <tr id="addQuestionRow">
+            <td>
+                <h3>
+                    <a href="javascript:addQuestionRow()">
+                        Add Question
+                    </a>
+                </h3>
+            </td>
+        </tr>
+    </table>
+}
+
+<script type="text/javascript">
+
+    var questions = new Array();
+    var questionTypes = ["Open", "MultipleChoice", "Checkbox", "Stars", "Grade", "Binary", "FuzzyBinary"];
+    var questionCount = @Model.Questions.Count
+
+    $(document).ready(function () {
+        @{ 
+            var count2 = 0; 
+        }
+        @foreach(var question in Model.Questions){
+            @Html.Raw(
+            "       tmp = new Object(); \n"+
+            "       tmp.text = \""+question.Text+"\";\n"+
+            "       tmp.type = \""+question.Type+"\";\n"
+            );
+            if (question.NextQuestion != null)
+            {
+                @Html.Raw("       tmp.next = " + question.NextQuestion.QuestionID+";\n")
+                @Html.Raw("       tmp.nextNumber = " + question.NextQuestion.QuestionNumber+";\n")
+                @Html.Raw("       $(\"#Question_"+count2+"_Type\").val(\"" + question.NextQuestion.QuestionNumber+"\");\n");
+            }
+            else
+            {
+                @Html.Raw("       tmp.next = null;\n");
+                @Html.Raw("       $(\"#Question_" + count2 + "_Type\").val(\"None\");\n");
+            }
+            @Html.Raw("       questions["+(count2)+"] = tmp;\n");
+   
+            count2++; 
+        }
+    });
+
+    function addQuestionRow() {
+        questionCount++;
+
+        $("#addQuestionRow").before("<tr><td>" + questionCount + "</td><td><input id=\"Question_" + questionCount + "_Text\" type=\"text\" value=\"\" name=\"Question_" + questionCount + "_Text\"></td><td><select id=\"Question_" + questionCount + "_Type\" name=\"Question_" + questionCount + "_Type\"><option> Open </option><option> MultipleChoice </option><option> Checkbox </option><option> Stars </option><option> Grade </option><option> Binary </option><option> FuzzyBinary </option></select></td><td><select id=\"Question_" + questionCount + "_Next\" name=\"Question_" + questionCount + "_Next\">");
+        $("#addQuestionRow").before("</select></td></tr>");
+    }
+
+</script>
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

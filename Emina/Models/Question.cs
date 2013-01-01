@@ -14,6 +14,7 @@ namespace Emina.Models
         }
 
         public int QuestionID { get; set; }
+        public int QuestionNumber { get; set; }
         public int EnqueteID { get; set; }
         public virtual Enquete Enquete { get; set; }
 

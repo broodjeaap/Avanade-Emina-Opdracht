@@ -1,0 +1,56 @@
+﻿@model IEnumerable<Emina.Models.Enquete>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<table>
+    <caption>
+        <h3>
+            Enquetes you built or @Html.ActionLink("create a new Enquete", "NewEnquete")
+        </h3>
+    </caption>
+    <tr>
+        <th>
+            Title:
+        </th>
+        <th>
+            Description:
+        </th>
+        <th>
+            Questions
+        </th>
+        <th>
+            Start Date
+        </th>
+        <th>
+            End Date
+        </th>
+        <th>
+            
+        </th>
+    </tr>
+    @foreach (var e in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => e.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => e.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => e.Questions.Count)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => e.StartDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => e.EndDate)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "EditEnquete", new { id = e.EnqueteID }) | @Html.ActionLink("Delete", "DeleteEnquete", new { id = e.EnqueteID })
+            </td>
+        </tr>
+    }
+</table>
