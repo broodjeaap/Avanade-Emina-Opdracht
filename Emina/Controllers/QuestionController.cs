@@ -41,6 +41,8 @@ namespace Emina.Controllers
         public ActionResult Create()
         {
             ViewBag.EnqueteID = new SelectList(db.Enquetes, "EnqueteID", "Name");
+            ViewBag.Type = QuestionType.Binary.ToSelectList();
+            ViewBag.NextQuestion = new SelectList(db.Questions, "NextQuestion", "Text");
             return View();
         }
 
@@ -71,7 +73,9 @@ namespace Emina.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.Type = QuestionType.Binary.ToSelectList();
             ViewBag.EnqueteID = new SelectList(db.Enquetes, "EnqueteID", "Name", question.EnqueteID);
+            ViewBag.NextQuestion = new SelectList(db.Questions, "NextQuestion", "Text");
             return View(question);
         }
 

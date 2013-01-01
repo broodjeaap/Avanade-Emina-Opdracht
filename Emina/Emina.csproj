@@ -116,6 +116,14 @@
       <Private>True</Private>
       <HintPath>..\packages\WebGrease.1.1.0\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="WebMatrix.Data, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\WebMatrix.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="WebMatrix.WebData, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\WebMatrix.WebData.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -125,9 +133,11 @@
     <Compile Include="Controllers\AnswerController.cs" />
     <Compile Include="Controllers\EnqueteController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\InitializeSimpleMembership.cs" />
     <Compile Include="Controllers\PossibleAnswerController.cs" />
     <Compile Include="Controllers\QuestionController.cs" />
     <Compile Include="Controllers\TakeEnqueteController.cs" />
+    <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -235,13 +245,8 @@
     <Content Include="Views\Enquete\Create.cshtml" />
     <Content Include="Views\Enquete\Edit.cshtml" />
     <Content Include="Views\Enquete\Delete.cshtml" />
-    <Content Include="Views\Question\Index.cshtml" />
-    <Content Include="Views\Question\Details.cshtml" />
-    <Content Include="Views\Question\Create.cshtml" />
-    <Content Include="Views\Question\Edit.cshtml" />
-    <Content Include="Views\Question\Delete.cshtml" />
     <Content Include="Views\TakeEnquete\Index.cshtml" />
-    <Content Include="Views\TakeEnquete\Question.cshtml" />
+    <Content Include="Views\TakeEnquete\OpenQuestion.cshtml" />
     <Content Include="Views\PossibleAnswer\Index.cshtml" />
     <Content Include="Views\PossibleAnswer\Details.cshtml" />
     <Content Include="Views\PossibleAnswer\Create.cshtml" />
@@ -253,6 +258,17 @@
     <Content Include="Views\Answer\Edit.cshtml" />
     <Content Include="Views\Answer\Delete.cshtml" />
     <Content Include="Views\Home\Login.cshtml" />
+    <Content Include="Views\Question\Index.cshtml" />
+    <Content Include="Views\Question\Details.cshtml" />
+    <Content Include="Views\Question\Create.cshtml" />
+    <Content Include="Views\Question\Edit.cshtml" />
+    <Content Include="Views\Question\Delete.cshtml" />
+    <Content Include="Views\TakeEnquete\MultipleChoiceQuestion.cshtml" />
+    <Content Include="Views\TakeEnquete\CheckboxQuestion.cshtml" />
+    <Content Include="Views\TakeEnquete\StarsQuestion.cshtml" />
+    <Content Include="Views\TakeEnquete\GradeQuestion.cshtml" />
+    <Content Include="Views\TakeEnquete\BinaryQuestion.cshtml" />
+    <Content Include="Views\TakeEnquete\FuzzyBinaryQuestion.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

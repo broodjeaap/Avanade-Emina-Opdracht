@@ -21,7 +21,8 @@ namespace Emina.Models
         [Display(Name = "Question Text")]
         public string Text { get; set; }
 
-        public QuestionType type { get; set; }
+        public QuestionType Type { get; set; }
+        public virtual Question NextQuestion { get; set; }
         public virtual ICollection<PossibleAnswer> PossibleAnswers { get; set; }
     }
 }

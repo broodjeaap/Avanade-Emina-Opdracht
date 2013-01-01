@@ -13,5 +13,6 @@ namespace Emina.Models
         public int QuestionID { get; set; }
         public virtual Question Question { get; set; }
         public string Text { get; set; }
+        public virtual Question NextQuestion { get; set; }
     }
 }

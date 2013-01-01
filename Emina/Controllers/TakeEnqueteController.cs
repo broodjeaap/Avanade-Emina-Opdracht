@@ -46,8 +46,25 @@ namespace Emina.Controllers
             Question q;
             if (keys.Contains("Answer"))
             {
-                q = db.Questions.Find(Qid+1);
+                
+                var answer = new Answer();
 
+                answer.EnqueteID = Eid;
+                answer.QuestionID = Qid;
+                answer.UserID = 1; //Todo, user stuff
+                var tmpQ = db.Questions.Find(Qid);
+                if (tmpQ.Type == QuestionType.MultipleChoice)
+                {
+                    answer.PossibleAnswerID = Convert.ToInt32(collection["Answer"]);
+                    q = db.Questions.Find(answer.PossibleAnswerID);
+                }
+                else
+                {
+                    answer.TextAnswer = collection["Answer"];
+                    q = tmpQ.NextQuestion;
+                }
+                db.Answers.Add(answer);
+                db.SaveChanges();
             }
             else
             {
@@ -55,12 +72,9 @@ namespace Emina.Controllers
             }
             if (q != null)
             {
-                return View(q);
+                return View(q.Type.ToString()+"Question", q);
             }
-            else
-            {
-                return RedirectToAction("Index");
-            }
+            return RedirectToAction("Index");
         }
     }
 }

@@ -111,3 +111,7 @@ INSERT INTO [dbo].[PossibleAnswers] ([PossibleAnswerID], [QuestionID], [Text]) V
 INSERT INTO [dbo].[PossibleAnswers] ([PossibleAnswerID], [QuestionID], [Text]) VALUES (74, 25, N'Enquete 5, Question 5, PossibleAnswer 2')
 INSERT INTO [dbo].[PossibleAnswers] ([PossibleAnswerID], [QuestionID], [Text]) VALUES (75, 25, N'Enquete 5, Question 5, PossibleAnswer 3')
 SET IDENTITY_INSERT [dbo].[PossibleAnswers] OFF
+
+SET IDENTITY_INSERT [dbo].[Users] ON
+INSERT INTO [dbo].[Users] ([UserID], [Name], [BirthDate], [Address], [Gender], [Email], [Password], [GUID], [HasSetPersonalInformation]) VALUES (1, N'David van Zessen', N'1989-01-09 00:00:00' , N'Talmaweg 45, Barendrecht', N'M', N'Davidzessen@gmail.com', N'Password', N'GUID', 'true')
+SET IDENTITY_INSERT [dbo].[Users] OFF
