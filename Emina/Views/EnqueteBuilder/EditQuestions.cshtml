@@ -35,6 +35,8 @@
             var Text = "Question_" + count + "_Text";
             var Type = "Question_" + count + "_Type";
             var Next = "Question_" + count + "_Next";
+            var Number = "Question_" + count + "_Number";
+            count++;
             <tr>
                 <td>
                     @question.QuestionNumber
@@ -83,12 +85,9 @@
 
     var questions = new Array();
     var questionTypes = ["Open", "MultipleChoice", "Checkbox", "Stars", "Grade", "Binary", "FuzzyBinary"];
-    var questionCount = @Model.Questions.Count
+    var questionCount = 0;
 
     $(document).ready(function () {
-        @{ 
-            var count2 = 0; 
-        }
         @foreach(var question in Model.Questions){
             @Html.Raw(
             "       tmp = new Object(); \n"+
@@ -99,24 +98,32 @@
             {
                 @Html.Raw("       tmp.next = " + question.NextQuestion.QuestionID+";\n")
                 @Html.Raw("       tmp.nextNumber = " + question.NextQuestion.QuestionNumber+";\n")
-                @Html.Raw("       $(\"#Question_"+count2+"_Type\").val(\"" + question.NextQuestion.QuestionNumber+"\");\n");
+                @Html.Raw("       $(\"#Question_\"+questionCount+\"_Type\").val(\"" + question.NextQuestion.QuestionNumber+"\");\n");
             }
             else
             {
                 @Html.Raw("       tmp.next = null;\n");
-                @Html.Raw("       $(\"#Question_" + count2 + "_Type\").val(\"None\");\n");
+                @Html.Raw("       $(\"#Question_\" + questionCount + \"_Type\").val(\"None\");\n");
             }
-            @Html.Raw("       questions["+(count2)+"] = tmp;\n");
-   
-            count2++; 
+            @Html.Raw("       questions[questionCount] = tmp;\n");
+            @Html.Raw("       questionCount++;\n");
         }
     });
 
     function addQuestionRow() {
-        questionCount++;
+        var row = "<tr><td>" + questionCount + "</td><td><input id=\"Question_" + questionCount + "_Text\" type=\"text\" value=\"\" name=\"Question_" + questionCount + "_Text\"></td><td><select id=\"Question_" + questionCount + "_Type\" name=\"Question_" + questionCount + "_Type\"><option> Open </option><option> MultipleChoice </option><option> Checkbox </option><option> Stars </option><option> Grade </option><option> Binary </option><option> FuzzyBinary </option></select></td><td><select id=\"Question_" + questionCount + "_Next\" name=\"Question_" + questionCount + "_Next\"><option>None</option>";
+        for (a = 0; a < questions.length; ++a) {
+            row += "<option>" + questions[a].nextNumber + "</option>";
+            //$("#Question_" + a + "_Next").add(questions[a].nextNumber);
+        }
+        row += "</select></td></tr>";
+        $("#addQuestionRow").before(row);
+        var tmp = new Object();
+        tmp.text = "";
+        tmp.type = "Open";
+        tmp.next = null;
+        questions[questionCount++] = tmp;
 
-        $("#addQuestionRow").before("<tr><td>" + questionCount + "</td><td><input id=\"Question_" + questionCount + "_Text\" type=\"text\" value=\"\" name=\"Question_" + questionCount + "_Text\"></td><td><select id=\"Question_" + questionCount + "_Type\" name=\"Question_" + questionCount + "_Type\"><option> Open </option><option> MultipleChoice </option><option> Checkbox </option><option> Stars </option><option> Grade </option><option> Binary </option><option> FuzzyBinary </option></select></td><td><select id=\"Question_" + questionCount + "_Next\" name=\"Question_" + questionCount + "_Next\">");
-        $("#addQuestionRow").before("</select></td></tr>");
     }
 
 </script>
