@@ -37,6 +37,7 @@
             var Next = "Question_" + count + "_Next";
             var Number = "Question_" + count + "_Number";
             var Row = "Question_" + count + "_Row";
+            var Delete = "Question_" + count + "_Delete";
             
             <tr id="@Row">
                 <td id="@Number">
@@ -71,14 +72,14 @@
                             </option>
                             @foreach (var q in Model.Questions.Where(quest => quest.QuestionID != question.QuestionID))
                             {
-                                <option value="@q.QuestionID">
+                                <option value="@q.QuestionNumber">
                                     @q.QuestionNumber
                                 </option>
                             }
                     </select>
                 </td>
                 <td>
-                    <a href="javascript:deleteRow(@count)">
+                    <a id="@Delete" href="javascript:deleteRow(@count)">
                         Delete
                     </a>
                 </td>
@@ -113,8 +114,7 @@
 
             if (question.NextQuestion != null)
             {
-                @Html.Raw("       tmp.next = " + question.NextQuestion.QuestionID+";\n")
-                @Html.Raw("       tmp.nextNumber = " + question.NextQuestion.QuestionNumber+";\n")
+                @Html.Raw("       tmp.next = " + question.NextQuestion.QuestionNumber+";\n")
                 @Html.Raw("       $(\"#Question_\"+questionCount+\"_Type\").val(\"" + question.NextQuestion.QuestionNumber+"\");\n");
             }
             else
@@ -127,15 +127,16 @@
         $("#questionCount").val(questionCount);
     });
 
+    var typeOptions = "<option> Open </option><option> MultipleChoice </option><option> Checkbox </option><option> Stars </option><option> Grade </option><option> Binary </option><option> FuzzyBinary </option>";
     function addQuestionRow() {
-        var row = "<tr id=\"Question_" + questionCount + "_Row\"><td id=\"Question_" + questionCount + "_Number\">" + questionCount + "</td><td><input id=\"Question_" + questionCount + "_Text\" type=\"text\" value=\"\" name=\"Question_" + questionCount + "_Text\"></td><td><select id=\"Question_" + questionCount + "_Type\" name=\"Question_" + questionCount + "_Type\"><option> Open </option><option> MultipleChoice </option><option> Checkbox </option><option> Stars </option><option> Grade </option><option> Binary </option><option> FuzzyBinary </option></select></td><td><select id=\"Question_" + questionCount + "_Next\" name=\"Question_" + questionCount + "_Next\"><option>None</option>";
+        var row = "<tr id=\"Question_" + questionCount + "_Row\"><td id=\"Question_" + questionCount + "_Number\">" + questionCount + "</td><td><input id=\"Question_" + questionCount + "_Text\" type=\"text\" value=\"\" name=\"Question_" + questionCount + "_Text\"></td><td><select id=\"Question_" + questionCount + "_Type\" name=\"Question_" + questionCount + "_Type\">"+ typeOptions + "</select></td><td><select id=\"Question_" + questionCount + "_Next\" name=\"Question_" + questionCount + "_Next\"><option value='null'>None</option>";
         for (a = 0; a < questionCount-1; ++a) {
-            row += "<option>" + (a + 1) + "</option>";
+            row += "<option value='"+ ( a + 1 ) + "'>" + (a + 1) + "</option>";
         }
         for (a = 1; a < questions.length; ++a) {
             $("#Question_" + a + "_Next").append("<option value=\""+questionCount+"\">" + questionCount + "</option>");
         }
-        row += "</select></td><td><a href=\"javascript:deleteRow("+questionCount+")\">Delete</a></td></tr>";
+        row += "</select></td><td><a id=\"Question_"+questionCount+"_Delete\" href=\"javascript:deleteRow(" + questionCount + ")\">Delete</a></td></tr>";
         $("#addQuestionRow").before(row);
         
         var tmp = new Object();
@@ -148,15 +149,54 @@
 
     function deleteRow(number) {
         $("#Question_" + number + "_Row").remove();
-        if (number != questionCount - 1) {
-            for (a = number; a < questionCount - 1; ++a) {
-                alert(a + " becomes " + (a + 1));
-                questions[a] = questions[a + 1];
-            }
-        } else {
-            
-        }
         questionCount--;
+        if (number != questionCount) {
+            for (a = number; a < questionCount; ++a) {
+                var oldNum = (a + 1);
+                var newNum = a;
+                questions[newNum] = questions[oldNum];
+                $("#Question_" + oldNum + "_Row").attr("id", "Question_" + newNum + "_Row");
+                var elem = $("#Question_" + oldNum + "_Number");
+                elem.attr("id", "Question_" + newNum + "_Number");
+                elem.html(newNum);
+                elem = $("#Question_" + oldNum + "_Text");
+                elem.attr("id", "Question_" + newNum + "_Text");
+                elem.attr("name", "Question_" + newNum + "_Text");
+                elem = $("#Question_" + oldNum + "_Type");
+                elem.attr("id", "Question_" + newNum + "_Type");
+                elem.attr("name", "Question_" + newNum + "_Type");
+                elem = $("#Question_" + oldNum + "_Next");
+                elem.attr("id", "Question_" + newNum + "_Next");
+                elem.attr("name", "Question_" + newNum + "_Next");
+                elem = $("#Question_" + oldNum + "_Delete");
+                elem.attr("id", "Question_" + newNum + "_Delete");
+                elem.attr("href", "javascript:deleteRow(" + newNum + ")");
+            }
+        }
+        
+        for (a = 1; a < questionCount; ++a) {
+            var elem = $("#Question_" + a + "_Next");
+            var val = parseInt(elem.val());
+            if (isNaN(val)) {
+                continue;
+            }
+            if (val == number) {
+                //alert(a+": equal");
+                elem.val("null").attr("selected", true);
+            } else if (val > number) {
+                //alert(a + ": higher");
+                //alert(String(val - 1));
+                var tmp = elem.val(String(val - 1));
+                if (tmp.val() != String(val - 1)) {
+                    elem.append("<option value'" + (val - 1) + "'>" + (val - 1) + "</option>");
+                    elem.val(String(val - 1));
+                }
+            }
+            //alert($("#Question_" + oldNum + "_Next option[value='" + questionCount + "']").attr("value"));
+        }
+        for (a = 1; a < questionCount; ++a) {
+            var elem = $("#Question_" + a + "_Next option[value='" + questionCount + "']").remove();
+        }
         $("#questionCount").val(questionCount);
     }
 
