@@ -24,6 +24,9 @@
                 Default Next Question
             </th>
             <th>
+                Next Question
+            </th>
+            <th>
 
             </th>
         </tr>
@@ -38,7 +41,6 @@
             var Number = "Question_" + count + "_Number";
             var Row = "Question_" + count + "_Row";
             var Delete = "Question_" + count + "_Delete";
-            
             <tr id="@Row">
                 <td id="@Number">
                     @question.QuestionNumber
@@ -50,7 +52,7 @@
                     <select id="@Type" name="@Type">
                             @foreach (var QuestionType in ViewBag.QuestionTypes)
                             {
-                                if (question.Type == QuestionType)
+                                if (question.Type.Equals(QuestionType))
                                 {
                                     <option selected="selected" value="@QuestionType">
                                         @QuestionType
@@ -79,11 +81,60 @@
                     </select>
                 </td>
                 <td>
+
+                </td>
+                <td>
                     <a id="@Delete" href="javascript:deleteRow(@count)">
                         Delete
                     </a>
                 </td>
             </tr>
+            
+            if (question.Type == Emina.Models.QuestionType.MultipleChoice)
+            {
+                var answerCount = 1;
+                var ac = "Question_" + count + "_AnswerCount";
+                var first = true;
+                foreach(var pa in ViewBag.PossibleAnswers[question.QuestionNumber]){
+                    var AnswerRow = "Question_" + count + "_Answer_" + answerCount + "_Row";
+                    var Next2 = "Question_" + count + "_Answer_" + answerCount + "_Next";
+                    <tr id="@AnswerRow">
+                        <td>
+                            -
+                            @if(first){
+                                <input hidden="hidden" id="@ac" name="@ac" value="@ViewBag.PossibleAnswers[question.QuestionNumber].Count" />   
+                                first = false;
+                            }
+                        </td>
+                        <td>
+                            @pa.Text
+                        </td>
+                        <td>
+                            -
+                        </td>
+                        <td>
+                            -
+                        </td>
+                        <td>
+                            <select id="@Next2" name="@Next2">
+                                <option value="null">
+                                    None
+                                </option>
+                                @foreach (var q in Model.Questions.Where(quest => quest.QuestionID != question.QuestionID))
+                                {
+                                    <option value="@q.QuestionNumber">
+                                        @q.QuestionNumber
+                                    </option>
+                                }
+                            </select>
+                        </td>
+                        <td>
+                            <a id ="test" href="javascript:deleteAnswerRow(@count, @answerCount)">Delete</a>
+                        </td>
+                    </tr>
+                    answerCount++;
+                }
+            }
             count++;
         }
         <tr id="addQuestionRow">
@@ -100,9 +151,13 @@
 }
 
 <script type="text/javascript">
-    var questionTypes = ["Open", "MultipleChoice", "Checkbox", "Stars", "Grade", "Binary", "FuzzyBinary"];
+    var questionTypes = new Array();
+    @foreach(var questionType in ViewBag.QuestionTypes){
+        @Html.Raw("    questionTypes.push(\""+questionType+"\");\n");   
+    }
     var questionCount = 1;
     var questions = new Array();
+    var answerCount = 1;
 
     $(document).ready(function () {
         @foreach(var question in Model.Questions){
@@ -115,19 +170,36 @@
             if (question.NextQuestion != null)
             {
                 @Html.Raw("       tmp.next = " + question.NextQuestion.QuestionNumber+";\n")
-                @Html.Raw("       $(\"#Question_\"+questionCount+\"_Type\").val(\"" + question.NextQuestion.QuestionNumber+"\");\n");
+                @Html.Raw("       $(\"#Question_\"+questionCount+\"_Next\").val(\"" + question.NextQuestion.QuestionNumber+"\");\n");
             }
             else
             {
                 @Html.Raw("       tmp.next = null;\n");
-                @Html.Raw("       $(\"#Question_\" + questionCount + \"_Type\").val(\"None\");\n");
+                @Html.Raw("       $(\"#Question_\" + questionCount + \"_Next\").val(\"None\");\n");
             }
-            @Html.Raw("       questions[questionCount++] = tmp;\n");
+            if(ViewBag.PossibleAnswers.ContainsKey(question.QuestionNumber)){
+                @Html.Raw("       tmp.answers = new Array();\n");
+                @Html.Raw("       answerCount = 1;\n");
+                foreach(var pa in ViewBag.PossibleAnswers[question.QuestionNumber]){
+                    @Html.Raw("       answer = new Object();\n");
+                    @Html.Raw("       answer.text = \"" + pa.Text + "\";\n");
+                    if(pa.NextQuestion != null){
+                        @Html.Raw("       $(\"#Question_\" + questionCount + \"_Answer_\" + answerCount + \"_Next\").val(\"" + pa.NextQuestion.QuestionNumber + "\");\n");
+                        @Html.Raw("       answer.next = " + pa.NextQuestion.QuestionNumber + ";\n");
+                    } else {
+                        @Html.Raw("       answer.next = null;\n");
+                    }
+                    @Html.Raw("       tmp.answers.push(answer);\n");
+                    @Html.Raw("       answerCount++;\n");
+                }
+                @Html.Raw("       tmp.answerCount = answerCount;\n");
+            }
+            @Html.Raw("      questions[questionCount++] = tmp;\n");
         }
         $("#questionCount").val(questionCount);
     });
 
-    var typeOptions = "<option> Open </option><option> MultipleChoice </option><option> Checkbox </option><option> Stars </option><option> Grade </option><option> Binary </option><option> FuzzyBinary </option>";
+    var typeOptions = questionTypes.map(function (n) { return "<option value=\"" + n + "\">" + n + "</option>" }).join("");//"<option> Open </option><option> MultipleChoice </option><option> Checkbox </option><option> Stars </option><option> Grade </option><option> Binary </option><option> FuzzyBinary </option>";
     function addQuestionRow() {
         var row = "<tr id=\"Question_" + questionCount + "_Row\"><td id=\"Question_" + questionCount + "_Number\">" + questionCount + "</td><td><input id=\"Question_" + questionCount + "_Text\" type=\"text\" value=\"\" name=\"Question_" + questionCount + "_Text\"></td><td><select id=\"Question_" + questionCount + "_Type\" name=\"Question_" + questionCount + "_Type\">"+ typeOptions + "</select></td><td><select id=\"Question_" + questionCount + "_Next\" name=\"Question_" + questionCount + "_Next\"><option value='null'>None</option>";
         for (a = 0; a < questionCount-1; ++a) {
@@ -136,7 +208,7 @@
         for (a = 1; a < questions.length; ++a) {
             $("#Question_" + a + "_Next").append("<option value=\""+questionCount+"\">" + questionCount + "</option>");
         }
-        row += "</select></td><td><a id=\"Question_"+questionCount+"_Delete\" href=\"javascript:deleteRow(" + questionCount + ")\">Delete</a></td></tr>";
+        row += "</select></td><td></td><td><a id=\"Question_"+questionCount+"_Delete\" href=\"javascript:deleteRow(" + questionCount + ")\">Delete</a></td></tr>";
         $("#addQuestionRow").before(row);
         
         var tmp = new Object();
@@ -147,10 +219,21 @@
         $("#questionCount").val(questionCount);
     }
 
-    function deleteRow(number) {
-        $("#Question_" + number + "_Row").remove();
+    function deleteAnswerRow(question, answer) {
+        $("#Question_" + question + "_Answer_" + answer + "_Row").remove();
+        //todo answerCount aanpassen + id's/names van hogere answers.
+    }
+
+    function deleteRow(number) { //delete a single row from the question table
+        if ($("#Question_" + number + "_Type").val() == "MultipleChoice") { //if the questions has multiple answers, remove them.
+            var answerCount = parseInt($("#Question_" + number + "_AnswerCount").val());
+            for (a = 1; a <= 4; ++a) {
+                $("#Question_" + number + "_Answer_" + a + "_Row").remove();
+            }
+        }
+        $("#Question_" + number + "_Row").remove(); //remove the row
         questionCount--;
-        if (number != questionCount) {
+        if (number != questionCount) { //if the row being removed is not the last row, update every row below it (decrementing its position)
             for (a = number; a < questionCount; ++a) {
                 var oldNum = (a + 1);
                 var newNum = a;
@@ -165,6 +248,14 @@
                 elem = $("#Question_" + oldNum + "_Type");
                 elem.attr("id", "Question_" + newNum + "_Type");
                 elem.attr("name", "Question_" + newNum + "_Type");
+                if (elem.val() == "MultipleChoice") {
+                    var answerCount = parseInt($("#Question_" + oldNum + "_AnswerCount").val());
+                    for (a = 1; a <= answerCount; ++a) {
+                        elem = $("#Question_" + oldNum + "_Answer_" + a + "_Next");
+                        elem.attr("id", "Question_" + newNum + "_Answer_" + a + "_Next");
+                        elem.attr("name", "Question_" + newNum + "_Answer_" + a + "_Next");
+                    }
+                }
                 elem = $("#Question_" + oldNum + "_Next");
                 elem.attr("id", "Question_" + newNum + "_Next");
                 elem.attr("name", "Question_" + newNum + "_Next");
@@ -174,27 +265,43 @@
             }
         }
         
-        for (a = 1; a < questionCount; ++a) {
+        for (a = 1; a < questionCount; ++a) { //decrement the next question pointer if necessary
             var elem = $("#Question_" + a + "_Next");
             var val = parseInt(elem.val());
-            if (isNaN(val)) {
+            if (isNaN(val)) { // next question = "None"
                 continue;
             }
-            if (val == number) {
-                //alert(a+": equal");
+            if (val == number) { // next question == deleted question
                 elem.val("null").attr("selected", true);
-            } else if (val > number) {
-                //alert(a + ": higher");
-                //alert(String(val - 1));
+            } else if (val > number) { //Next question > deleted question, decrement
                 var tmp = elem.val(String(val - 1));
                 if (tmp.val() != String(val - 1)) {
                     elem.append("<option value'" + (val - 1) + "'>" + (val - 1) + "</option>");
                     elem.val(String(val - 1));
                 }
             }
-            //alert($("#Question_" + oldNum + "_Next option[value='" + questionCount + "']").attr("value"));
+            if ($("#Question_" + a + "_Type").val() == "MultipleChoice") { //Question has multiple answers, update anwers
+                var answerCount = parseInt($("#Question_" + a + "_AnswerCount").val());
+                for (b = 1; b <= answerCount; ++b) {
+
+                    var elem = $("#Question_1_Answer_1_Next");
+                    var val = parseInt(elem.val());
+                    if (isNaN(val)) { // next question = "None"
+                        continue;
+                    }
+                    if (val == number) { // next question == deleted question
+                        elem.val("null").attr("selected", true);
+                    } else if (val > number) { //Next question > deleted question, decrement
+                        var tmp = elem.val(String(val - 1));
+                        if (tmp.val() != String(val - 1)) {
+                            elem.append("<option value'" + (val - 1) + "'>" + (val - 1) + "</option>");
+                            elem.val(String(val - 1));
+                        }
+                    }
+                }
+            }
         }
-        for (a = 1; a < questionCount; ++a) {
+        for (a = 1; a < questionCount; ++a) { //remove the question from nextQuestions lists
             var elem = $("#Question_" + a + "_Next option[value='" + questionCount + "']").remove();
         }
         $("#questionCount").val(questionCount);

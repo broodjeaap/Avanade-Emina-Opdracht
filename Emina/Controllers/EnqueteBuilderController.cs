@@ -60,7 +60,17 @@ namespace Emina.Controllers
         public ActionResult EditQuestions(int id)
         {
             ViewBag.QuestionTypes = Enum.GetValues(typeof(QuestionType));
-            return View(db.Enquetes.Find(id));
+            Dictionary<int, IEnumerable<PossibleAnswer>> possibleAnswers = new Dictionary<int, IEnumerable<PossibleAnswer>>();
+            var Enquete = db.Enquetes.Find(id);
+            foreach (var q in Enquete.Questions)
+            {
+                if (q.Type == QuestionType.MultipleChoice)
+                {
+                    possibleAnswers[q.QuestionNumber] = db.PossibleAnswers.Where(i => i.QuestionID == q.QuestionID).ToList();
+                }
+            }
+            ViewBag.PossibleAnswers = possibleAnswers;
+            return View(Enquete);
         }
     }
 }

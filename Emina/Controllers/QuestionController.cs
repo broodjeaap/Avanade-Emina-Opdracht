@@ -54,6 +54,7 @@ namespace Emina.Controllers
         {
             if (ModelState.IsValid)
             {
+                question.QuestionNumber = db.Enquetes.Find(question.EnqueteID).Questions.Max(q => q.QuestionNumber) + 1;
                 db.Questions.Add(question);
                 db.SaveChanges();
                 return RedirectToAction("Index");
