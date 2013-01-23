@@ -94,17 +94,14 @@
             {
                 var answerCount = 1;
                 var ac = "Question_" + count + "_AnswerCount";
-                var first = true;
+                var add = "Question_" + count + "_AddRow";
                 foreach(var pa in ViewBag.PossibleAnswers[question.QuestionNumber]){
                     var AnswerRow = "Question_" + count + "_Answer_" + answerCount + "_Row";
                     var Next2 = "Question_" + count + "_Answer_" + answerCount + "_Next";
+                    var Delete2 = "Question_" + count + "_Answer_" + answerCount + "_Delete";
                     <tr id="@AnswerRow">
                         <td>
                             -
-                            @if(first){
-                                <input hidden="hidden" id="@ac" name="@ac" value="@ViewBag.PossibleAnswers[question.QuestionNumber].Count" />   
-                                first = false;
-                            }
                         </td>
                         <td>
                             @pa.Text
@@ -129,11 +126,22 @@
                             </select>
                         </td>
                         <td>
-                            <a id ="test" href="javascript:deleteAnswerRow(@count, @answerCount)">Delete</a>
+                            <a id ="@Delete2" href="javascript:deleteAnswerRow(@count, @answerCount)">Delete</a>
                         </td>
                     </tr>
                     answerCount++;
                 }
+                <tr id="@add">
+                    <td>
+
+                    </td>
+                    <td>
+                        <a href="javascript:alert('test')">
+                            Add Answer
+                        </a>
+                        <input id="@ac" hidden="hidden" value="@ViewBag.PossibleAnswers[question.QuestionNumber].Count" name="@ac">
+                    </td>
+                </tr>
             }
             count++;
         }
@@ -199,7 +207,7 @@
         $("#questionCount").val(questionCount);
     });
 
-    var typeOptions = questionTypes.map(function (n) { return "<option value=\"" + n + "\">" + n + "</option>" }).join("");//"<option> Open </option><option> MultipleChoice </option><option> Checkbox </option><option> Stars </option><option> Grade </option><option> Binary </option><option> FuzzyBinary </option>";
+    var typeOptions = questionTypes.map(function (n) { return "<option value=\"" + n + "\">" + n + "</option>" }).join("");
     function addQuestionRow() {
         var row = "<tr id=\"Question_" + questionCount + "_Row\"><td id=\"Question_" + questionCount + "_Number\">" + questionCount + "</td><td><input id=\"Question_" + questionCount + "_Text\" type=\"text\" value=\"\" name=\"Question_" + questionCount + "_Text\"></td><td><select id=\"Question_" + questionCount + "_Type\" name=\"Question_" + questionCount + "_Type\">"+ typeOptions + "</select></td><td><select id=\"Question_" + questionCount + "_Next\" name=\"Question_" + questionCount + "_Next\"><option value='null'>None</option>";
         for (a = 0; a < questionCount-1; ++a) {
@@ -221,7 +229,21 @@
 
     function deleteAnswerRow(question, answer) {
         $("#Question_" + question + "_Answer_" + answer + "_Row").remove();
-        //todo answerCount aanpassen + id's/names van hogere answers.
+        var elem = $("#Question_" + question + "_AnswerCount");
+        var val = parseInt(elem.val());
+        elem.val(val - 1);
+        for (var a = question; a < val; ++a) {
+            var oldNum = (a + 1);
+            var newNum = a;
+            elem = $("#Question_" + question + "_Answer_" + oldNum + "_Row");
+            elem.attr("id", "Question_" + question + "_Answer_" + newNum + "_Row");
+            elem = $("#Question_" + question + "_Answer_" + oldNum + "_Next");
+            elem.attr("id", "Question_" + question + "_Answer_" + newNum + "_Next");
+            elem.attr("name", "Question_" + question + "_Answer_" + newNum + "_Next");
+            elem = $("#Question_" + question + "_Answer_" + oldNum + "_Delete");
+            elem.attr("id", "Question_" + question + "_Answer_" + newNum + "_Delete");
+            elem.attr("href", "javascript:deleteAnswerRow(" + question + ", " + newNum + ")");
+        }
     }
 
     function deleteRow(number) { //delete a single row from the question table
@@ -250,10 +272,11 @@
                 elem.attr("name", "Question_" + newNum + "_Type");
                 if (elem.val() == "MultipleChoice") {
                     var answerCount = parseInt($("#Question_" + oldNum + "_AnswerCount").val());
-                    for (a = 1; a <= answerCount; ++a) {
-                        elem = $("#Question_" + oldNum + "_Answer_" + a + "_Next");
-                        elem.attr("id", "Question_" + newNum + "_Answer_" + a + "_Next");
-                        elem.attr("name", "Question_" + newNum + "_Answer_" + a + "_Next");
+                    for (b = 1; b <= answerCount; ++b) {
+                        $("#Question_" + oldNum + "_Answer_" + b + "_Row").attr("id", "#Question_" + newNum + "_Answer_" + b + "_Row");
+                        elem = $("#Question_" + oldNum + "_Answer_" + b + "_Next");
+                        elem.attr("id", "Question_" + newNum + "_Answer_" + b + "_Next");
+                        elem.attr("name", "Question_" + newNum + "_Answer_" + b + "_Next");
                     }
                 }
                 elem = $("#Question_" + oldNum + "_Next");
@@ -266,45 +289,40 @@
         }
         
         for (a = 1; a < questionCount; ++a) { //decrement the next question pointer if necessary
-            var elem = $("#Question_" + a + "_Next");
-            var val = parseInt(elem.val());
-            if (isNaN(val)) { // next question = "None"
-                continue;
-            }
-            if (val == number) { // next question == deleted question
-                elem.val("null").attr("selected", true);
-            } else if (val > number) { //Next question > deleted question, decrement
-                var tmp = elem.val(String(val - 1));
-                if (tmp.val() != String(val - 1)) {
-                    elem.append("<option value'" + (val - 1) + "'>" + (val - 1) + "</option>");
-                    elem.val(String(val - 1));
-                }
-            }
+            updateNextQuestionDropdown($("#Question_" + a + "_Next"),number);
             if ($("#Question_" + a + "_Type").val() == "MultipleChoice") { //Question has multiple answers, update anwers
                 var answerCount = parseInt($("#Question_" + a + "_AnswerCount").val());
                 for (b = 1; b <= answerCount; ++b) {
-
-                    var elem = $("#Question_1_Answer_1_Next");
-                    var val = parseInt(elem.val());
-                    if (isNaN(val)) { // next question = "None"
-                        continue;
-                    }
-                    if (val == number) { // next question == deleted question
-                        elem.val("null").attr("selected", true);
-                    } else if (val > number) { //Next question > deleted question, decrement
-                        var tmp = elem.val(String(val - 1));
-                        if (tmp.val() != String(val - 1)) {
-                            elem.append("<option value'" + (val - 1) + "'>" + (val - 1) + "</option>");
-                            elem.val(String(val - 1));
-                        }
-                    }
+                    updateNextQuestionDropdown($("#Question_" + a + "_Answer_" + b + "_Next"),number);
                 }
             }
         }
         for (a = 1; a < questionCount; ++a) { //remove the question from nextQuestions lists
             var elem = $("#Question_" + a + "_Next option[value='" + questionCount + "']").remove();
+            if ($("#Question_" + a + "_Type").val() == "MultipleChoice") {
+                var answerCount = parseInt($("#Question_" + a + "_AnswerCount").val());
+                for (b = 1; b <= answerCount; ++b) {
+                    $("#Question_" + a + "_Answer_" + b + "_Next option[value='" + questionCount + "']").remove();
+                }
+            }
         }
         $("#questionCount").val(questionCount);
+    }
+
+    function updateNextQuestionDropdown(elem,number) { //update dropdown list for next question when a row is deleted
+        var val = parseInt(elem.val());
+        if (isNaN(val)) { // next question = "None"
+            return;
+        }
+        if (val == number) { // next question == deleted question
+            elem.val("null").attr("selected", true);
+        } else if (val > number) { //Next question > deleted question, decrement
+            var tmp = elem.val(String(val - 1));
+            if (tmp.val() != String(val - 1)) {
+                elem.append("<option value'" + (val - 1) + "'>" + (val - 1) + "</option>");
+                elem.val(String(val - 1));
+            }
+        }
     }
 
 </script>
