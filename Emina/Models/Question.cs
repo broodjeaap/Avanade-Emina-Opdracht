@@ -24,6 +24,7 @@ namespace Emina.Models
 
         public QuestionType Type { get; set; }
         public virtual Question NextQuestion { get; set; }
+        public int NextQuestionID { get; set; }
         public virtual ICollection<PossibleAnswer> PossibleAnswers { get; set; }
     }
 }

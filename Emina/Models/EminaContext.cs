@@ -27,6 +27,16 @@ namespace Emina.Models
                 .HasRequired(a => a.PossibleAnswer)
                 .WithRequiredDependent()
                 .WillCascadeOnDelete(false);
+            /*
+            modelBuilder.Entity<PossibleAnswer>()
+                .HasRequired(a => a.Question)
+                .WithOptional()
+                .WillCascadeOnDelete(true);
+            modelBuilder.Entity<Question>()
+                .HasRequired(a => a.Enquete)
+                .WithOptional()
+                .WillCascadeOnDelete(true);
+             */
         }
     }
 }
