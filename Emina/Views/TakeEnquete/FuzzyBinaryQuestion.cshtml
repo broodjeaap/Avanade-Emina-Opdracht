@@ -5,3 +5,49 @@
 }
 
 <h2>FuzzyBinaryQuestion</h2>
+@using (Html.BeginForm("Question", "TakeEnquete", FormMethod.Post)){
+    <table class="FuzzyBinaryTable">
+        <caption>
+            <h2>
+                @Model.Text
+            </h2>
+        </caption>
+        <tr>
+            <td>
+                --
+            </td>
+            <td>
+                -
+            </td>
+            <td>
+                0
+            </td>
+            <td>
+                +
+            </td>
+            <td>
+                ++
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="radio" name="Answer" value="++"/>
+            </td>
+            <td>
+                <input type="radio" name="Answer" value="+"/>
+            </td>
+            <td>
+                <input type="radio" name="Answer" value="0"/>
+            </td>
+            <td>
+                <input type="radio" name="Answer" value="-"/>
+            </td>
+            <td>
+                <input type="radio" name="Answer" value="--"/>
+            </td>
+        </tr>
+    </table>
+    <input type="hidden" name="EnqueteID" value="@Model.EnqueteID" />
+    <input type="hidden" name="QuestionID" value="@Model.QuestionID" />
+    <input type="submit" value="Next" style="float:right"/>
+}

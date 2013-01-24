@@ -28,7 +28,7 @@ namespace Emina.Controllers
         [HttpPost]
         public ActionResult Login(LoginModel model)
         {
-            System.Diagnostics.Debug.WriteLine(model.Email + ", " + model.Password);
+            
             /*
             if (ModelState.IsValid && WebSecurity.Login(model.Email, model.Password, persistCookie: model.RememberMe))
             {

@@ -44,7 +44,7 @@ namespace Emina.Controllers
             var Qid = Convert.ToInt32(collection["QuestionID"]);
             var enquetes = db.Enquetes.Find(Eid); 
             Question q;
-            if (keys.Contains("Answer"))
+            if (keys.Contains("Answer") && false)
             {
                 
                 var answer = new Answer();

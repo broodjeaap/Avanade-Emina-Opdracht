@@ -71,10 +71,11 @@ namespace Emina.Controllers
             {
                 if (q.Type == QuestionType.MultipleChoice || q.Type == QuestionType.Checkbox)
                 {
-                    possibleAnswers[q.QuestionNumber] = db.PossibleAnswers.Where(i => i.QuestionID == q.QuestionID).ToList();
+                    possibleAnswers[q.QuestionNumber] = q.PossibleAnswers;
                 }
             }
             ViewBag.PossibleAnswers = possibleAnswers;
+            Enquete.Questions = Enquete.Questions.OrderBy(q => q.QuestionNumber).ToList();
             return View(Enquete);
         }
 
@@ -82,28 +83,39 @@ namespace Emina.Controllers
         public ActionResult EditQuestions(FormCollection collection)
         {
             Enquete e = db.Enquetes.Find(int.Parse(collection["Enquete_id"]));
+
             var questionCount = int.Parse(collection["questionCount"]);
             questionCount--;
-            Dictionary<int,Question> questions = new Dictionary<int,Question>();
+            var questions = new Dictionary<string,Question>();
             for (var a = 1;a <= questionCount;++a) 
             {
-                var q = new Question();
+                var c = e.Questions.Where(qu => qu.QuestionNumber == a);
+                Question q;
+                if (c.Count() == 0)
+                {
+                    q = new Question();
+                }
+                else
+                {
+                    q = c.First();
+                    db.Entry(q).State = EntityState.Modified;
+                }
                 q.EnqueteID = e.EnqueteID;
                 q.Enquete = e;
                 q.QuestionNumber = a;
                 q.Text = collection["Question_" + a + "_Text"]; //Question_1_Text
                 q.Type = (QuestionType)Enum.Parse(typeof(QuestionType),collection["Question_" + a + "_Type"]); //Question_1_Type
-                questions.Add(a, q);
+                questions.Add(a.ToString(), q);
             }
             var allPossibleAnswers = new Dictionary<int, ICollection<PossibleAnswer>>();
             for (var a = 1; a <= questionCount; ++a)//Question_1_Next
             {
-                var q = questions[a];
+                var q = questions[a.ToString()];
                 int tmp;
                 if (int.TryParse(collection["Question_" + a + "_Next"],out tmp))
                 {
-                    q.NextQuestionID = questions[tmp].NextQuestionID;
-                    q.NextQuestion = questions[tmp];
+                    q.NextQuestionID = questions[tmp+""].NextQuestionID;
+                    q.NextQuestion = questions[tmp+""];
                 }
                 if (q.Type == QuestionType.MultipleChoice || q.Type == QuestionType.Checkbox) // type == multiplechoice || type == checkbox
                 {
@@ -115,18 +127,24 @@ namespace Emina.Controllers
                         possibleAnswer.Text = collection["Question_" + a + "_Answer_" + b + "_Text"]; //Question_1_Answer_1_Text
                         if (int.TryParse(collection["Question_" + a + "_Answer_" + b + "_Next"], out tmp))
                         {
-                            possibleAnswer.NextQuestionID = questions[tmp].QuestionID;
-                            possibleAnswer.NextQuestion = questions[tmp];
+                            possibleAnswer.NextQuestionID = questions[tmp+""].QuestionID;
+                            possibleAnswer.NextQuestion = questions[tmp+""];
                         }
-                        possibleAnswer.QuestionID = questions[a].QuestionID;
-                        possibleAnswer.Question = questions[a];
+                        possibleAnswer.QuestionID = questions[a.ToString()].QuestionID;
+                        possibleAnswer.Question = questions[a.ToString()];
                         possibleAnswers.Add(possibleAnswer);
                     }
                     q.PossibleAnswers = possibleAnswers;
                     allPossibleAnswers[q.QuestionNumber] = possibleAnswers;
                 }
             }
-            e.Questions = questions.Values;
+            var questionList = new List<Question>(questionCount);
+            for (var a = 1; a <= questionCount; ++a)
+            {
+                questionList.Insert(a-1,questions[a.ToString()]);
+            }
+            questionList.Reverse(); //fuck it
+            e.Questions = questionList;
             if (ModelState.IsValid)
             {
                 db.Entry(e).State = EntityState.Modified;
