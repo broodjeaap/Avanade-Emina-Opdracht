@@ -210,7 +210,7 @@
 
     var typeOptions = questionTypes.map(function (n) { return "<option value=\"" + n + "\">" + n + "</option>" }).join("");
     function addQuestionRow() {
-        var row = "<tr id=\"Question_" + questionCount + "_Row\"><td id=\"Question_" + questionCount + "_Number\">" + questionCount + "</td><td><input id=\"Question_" + questionCount + "_Text\" type=\"text\" value=\"\" name=\"Question_" + questionCount + "_Text\"></td><td><select id=\"Question_" + questionCount + "_Type\" name=\"Question_" + questionCount + "_Type\">"+ typeOptions + "</select></td><td><select id=\"Question_" + questionCount + "_Next\" name=\"Question_" + questionCount + "_Next\"><option value='null'>None</option>";
+        var row = "<tr id=\"Question_" + questionCount + "_Row\"><td id=\"Question_" + questionCount + "_Number\">" + questionCount + "</td><td><input id=\"Question_" + questionCount + "_Text\" type=\"text\" value=\"\" name=\"Question_" + questionCount + "_Text\"></td><td><select id=\"Question_" + questionCount + "_Type\" name=\"Question_" + questionCount + "_Type\" onchange=\"javascript:typeChange(this," + questionCount + ")\">" + typeOptions + "</select></td><td><select id=\"Question_" + questionCount + "_Next\" name=\"Question_" + questionCount + "_Next\"><option value='null'>None</option>";
         for (a = 1; a < questionCount; ++a) {
             row += "<option value='"+ a + "'>" + a + "</option>";
         }
