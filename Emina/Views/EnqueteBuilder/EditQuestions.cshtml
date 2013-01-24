@@ -49,7 +49,7 @@
                     <input type="text" name="@Text" id="@Text" value="@question.Text"/>
                 </td>
                 <td>
-                    <select id="@Type" name="@Type">
+                    <select id="@Type" name="@Type" onchange="javascript:typeChange(this,@count)">
                             @foreach (var QuestionType in ViewBag.QuestionTypes)
                             {
                                 if (question.Type.Equals(QuestionType))
@@ -99,12 +99,13 @@
                     var AnswerRow = "Question_" + count + "_Answer_" + answerCount + "_Row";
                     var Next2 = "Question_" + count + "_Answer_" + answerCount + "_Next";
                     var Delete2 = "Question_" + count + "_Answer_" + answerCount + "_Delete";
+                    var Text2 = "Question_" + count + "_Answer_" + answerCount + "_Text";
                     <tr id="@AnswerRow">
                         <td>
                             -
                         </td>
                         <td>
-                            @pa.Text
+                            <input type="text" id="@Text2" name="@Text2" value ="@pa.Text"/>
                         </td>
                         <td>
                             -
@@ -214,9 +215,9 @@
             row += "<option value='"+ a + "'>" + a + "</option>";
         }
         var optionElem = "<option value=\"" + questionCount + "\">" + questionCount + "</option>";
-        for (a = 1; a < questions.length; ++a) {
+        for (a = 1; a < questionCount; ++a) {
             $("#Question_" + a + "_Next").append(optionElem);
-            if ($("#Question_" + a + "_Type").val() == "MultipleChoice") {
+            if ($("#Question_" + a + "_Type").val() == "MultipleChoice" || $("#Question_" + a + "_Type").val() == "Checkbox") {
                 var val = parseInt($("#Question_" + a + "_AnswerCount").val());
                 for (b = 1; b <= val; ++b) {
                     $("#Question_" + a + "_Answer_" + b + "_Next").append(optionElem);
@@ -235,11 +236,15 @@
     }
 
     function addAnswerRow(question) {
+        $("#Question_" + question + "_addAnswerRow").before(newAnswerRow(question));
+    }
+
+    function newAnswerRow(question) {
         var elem = $("#Question_" + question + "_AnswerCount");
         var val = parseInt(elem.val());
         val++;
         elem.val(val);
-        var row = "<tr id=\"Question_" + question + "_Answer_" + val + "_Row\"><td> - </td><td> Antwoord " + val + " </td><td> - </td><td> - </td><td><select id='Question_" + question + "_Answer_" + val + "_Next' name='Question_" + question + "_Answer_" + val + "_Next'><option value='null'>Default</option>";
+        var row = "<tr id=\"Question_" + question + "_Answer_" + val + "_Row\"><td> - </td><td> <input type=\"text\" id=\"Question_" + question + "_Answer_" + val + "_Text\" name=\"Question_" + question + "_Answer_" + val + "_Text\" value=\"Antwoord " + val + "\" /> </td><td> - </td><td> - </td><td><select id='Question_" + question + "_Answer_" + val + "_Next' name='Question_" + question + "_Answer_" + val + "_Next'><option value='null'>Default</option>";
         for (a = 1; a < questionCount; ++a) {
             if (a == question) {
                 continue;
@@ -249,7 +254,7 @@
         row += "</td></select>";
 
         row += "<td><a id=\"Question_" + question + "_Answer_" + val + "_Delete\" href='javascript:deleteAnswerRow(" + question + ", " + val + ")'>Delete</a></tr>";
-        $("#Question_" + question + "_addAnswerRow").before(row);
+        return row;
     }
 
     function deleteAnswerRow(question, answer) {
@@ -268,11 +273,14 @@
             elem = $("#Question_" + question + "_Answer_" + oldNum + "_Delete");
             elem.attr("id", "Question_" + question + "_Answer_" + newNum + "_Delete");
             elem.attr("href", "javascript:deleteAnswerRow(" + question + ", " + newNum + ")");
+            elem = $("#Question_" + question + "_Answer_" + oldNum + "_Text");
+            elem.attr("id", "Question_" + question + "_Answer_" + newNum + "_Text");
+            elem.attr("name", "Question_" + question + "_Answer_" + newNum + "_Text");
         }
     }
 
     function deleteRow(number) { //delete a single row from the question table
-        if ($("#Question_" + number + "_Type").val() == "MultipleChoice") { //if the questions has multiple answers, remove them.
+        if ($("#Question_" + number + "_Type").val() == "MultipleChoice" || $("#Question_" + number + "_Type").val() == "Checkbox") { //if the questions has multiple answers, remove them.
             var answerCount = parseInt($("#Question_" + number + "_AnswerCount").val());
             for (a = 1; a <= answerCount; ++a) {
                 $("#Question_" + number + "_Answer_" + a + "_Row").remove();
@@ -296,7 +304,7 @@
                 elem = $("#Question_" + oldNum + "_Type"); //Type
                 elem.attr("id", "Question_" + newNum + "_Type");
                 elem.attr("name", "Question_" + newNum + "_Type");
-                if (elem.val() == "MultipleChoice") { //Has multiple answers?
+                if (elem.val() == "MultipleChoice" || elem.val() == "Checkbox") { //Has multiple answers?
                     elem = $("#Question_" + oldNum + "_AnswerCount"); //answerCount
                     elem.attr("id", "Question_" + newNum + "_AnswerCount");
                     elem.attr("name", "Question_" + newNum + "_AnswerCount");
@@ -322,7 +330,7 @@
         
         for (a = 1; a < questionCount; ++a) { //decrement the next question pointer if necessary
             updateNextQuestionDropdown($("#Question_" + a + "_Next"),number);
-            if ($("#Question_" + a + "_Type").val() == "MultipleChoice") { //Question has multiple answers, update anwers
+            if ($("#Question_" + a + "_Type").val() == "MultipleChoice" || $("#Question_" + a + "_Type").val() == "Checkbox") { //Question has multiple answers, update anwers
                 var answerCount = parseInt($("#Question_" + a + "_AnswerCount").val());
                 for (b = 1; b <= answerCount; ++b) {
                     updateNextQuestionDropdown($("#Question_" + a + "_Answer_" + b + "_Next"),number);
@@ -331,7 +339,7 @@
         }
         for (a = 1; a < questionCount; ++a) { //remove the question from nextQuestions lists
             var elem = $("#Question_" + a + "_Next option[value='" + questionCount + "']").remove();
-            if ($("#Question_" + a + "_Type").val() == "MultipleChoice") {
+            if ($("#Question_" + a + "_Type").val() == "MultipleChoice" || $("#Question_" + a + "_Type").val() == "Checkbox") {
                 var answerCount = parseInt($("#Question_" + a + "_AnswerCount").val());
                 for (b = 1; b <= answerCount; ++b) {
                     $("#Question_" + a + "_Answer_" + b + "_Next option[value='" + questionCount + "']").remove();
@@ -354,6 +362,26 @@
                 elem.append("<option value'" + (val - 1) + "'>" + (val - 1) + "</option>");
                 elem.val(String(val - 1));
             }
+        }
+    }
+
+    function typeChange(elem) {
+        elem = $(elem);
+        var row = elem.parent().parent();
+        var question = parseInt(row.children().first().html()); //h4x
+        
+        if (elem.val() == "MultipleChoice" || elem.val() == "Checkbox") {
+            var hasAnswers = ($("#Question_" + question + "_AnswerCount").val() != undefined);
+            if (!hasAnswers) {
+                var newAnswerRow = "<tr id=\"Question_" + question + "_addAnswerRow\"><td></td><td><a href=\"javascript:addAnswerRow(" + question + ")\">Add Answer</a><input id=\"Question_" + question + "_AnswerCount\" type=\"hidden\" value=\"0\" name=\"Question_" + question + "_AnswerCount\"></td></tr>";
+                row.after(newAnswerRow);
+            }
+        } else {
+            var count = parseInt($("#Question_" + question + "_AnswerCount").val());
+            for (var a = 1; a <= count; ++a) {
+                $("#Question_" + question + "_Answer_" + a + "_Row").remove();
+            }
+            $("#Question_" + question + "_addAnswerRow").remove();
         }
     }
 
