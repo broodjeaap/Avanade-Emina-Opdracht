@@ -86,7 +86,7 @@ namespace Emina.Controllers
             {
                 if (q.Type == QuestionType.Checkbox || q.Type == QuestionType.MultipleChoice)
                 {
-                    for (int a = q.PossibleAnswers.Count - 1; a > 0;--a)
+                    for (int a = q.PossibleAnswers.Count - 1; a >= 0;--a)
                     {
                         db.PossibleAnswers.Remove(q.PossibleAnswers.ElementAt(a));
                     }
@@ -123,7 +123,7 @@ namespace Emina.Controllers
                 int tmp;
                 if (int.TryParse(collection["Question_" + a + "_Next"],out tmp))
                 {
-                    q.NextQuestionID = questions[tmp+""].NextQuestionID;
+                    q.NextQuestionID = questions[tmp+""].QuestionID;
                     q.NextQuestion = questions[tmp+""];
                 }
                 if (q.Type == QuestionType.MultipleChoice || q.Type == QuestionType.Checkbox) // type == multiplechoice || type == checkbox
@@ -136,8 +136,17 @@ namespace Emina.Controllers
                         possibleAnswer.Text = collection["Question_" + a + "_Answer_" + b + "_Text"]; //Question_1_Answer_1_Text
                         if (int.TryParse(collection["Question_" + a + "_Answer_" + b + "_Next"], out tmp))
                         {
-                            possibleAnswer.NextQuestionID = questions[tmp+""].QuestionID;
-                            possibleAnswer.NextQuestion = questions[tmp+""];
+                            possibleAnswer.NextQuestionID = questions[tmp + ""].QuestionID;
+                            possibleAnswer.NextQuestion = questions[tmp + ""];
+                        }
+                        else
+                        {
+                            if (int.TryParse(collection["Question_" + a + "_Next"], out tmp))
+                            {
+                                possibleAnswer.NextQuestionID = questions[a + ""].QuestionID;
+                                possibleAnswer.NextQuestion = questions[a + ""];
+                            }
+                            
                         }
                         possibleAnswer.QuestionID = questions[a.ToString()].QuestionID;
                         possibleAnswer.Question = questions[a.ToString()];
