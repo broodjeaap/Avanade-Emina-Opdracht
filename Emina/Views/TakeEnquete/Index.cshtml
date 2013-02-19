@@ -35,13 +35,7 @@
                 @Html.DisplayFor(modelItem => e.Questions.Count)
             </td>
             <td>
-                @using (Html.BeginForm("Question", "TakeEnquete")) 
-                {
-                    @Html.ValidationSummary(true)
-                    @Html.HiddenFor(model => e.Questions.First().EnqueteID) //yeah...
-                    @Html.HiddenFor(model => e.Questions.First().QuestionID)
-                    <input type="submit" value="Start" />
-                }
+                @Html.ActionLink("Start", "Question", new { EnqueteId = e.EnqueteID, QuestionId = e.Questions.OrderBy(q => q.QuestionNumber).First().QuestionNumber})
             </td>
         </tr>
     }

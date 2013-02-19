@@ -49,7 +49,6 @@ namespace Emina.Controllers
 
         public ActionResult EditEnquete(int id)
         {
-            System.Diagnostics.Debug.WriteLine("Test");
             var e = db.Enquetes.Find(id);
             if (e != null)
             {
@@ -83,11 +82,21 @@ namespace Emina.Controllers
         public ActionResult EditQuestions(FormCollection collection)
         {
             Enquete e = db.Enquetes.Find(int.Parse(collection["Enquete_id"]));
-
+            foreach(Question q in e.Questions)
+            {
+                if (q.Type == QuestionType.Checkbox || q.Type == QuestionType.MultipleChoice)
+                {
+                    for (int a = q.PossibleAnswers.Count - 1; a > 0;--a)
+                    {
+                        db.PossibleAnswers.Remove(q.PossibleAnswers.ElementAt(a));
+                    }
+                }
+            }
+            db.SaveChanges();
             var questionCount = int.Parse(collection["questionCount"]);
             questionCount--;
             var questions = new Dictionary<string,Question>();
-            for (var a = 1;a <= questionCount;++a) 
+            for (var a = 1;a <= questionCount;++a)
             {
                 var c = e.Questions.Where(qu => qu.QuestionNumber == a);
                 Question q;
@@ -141,11 +150,11 @@ namespace Emina.Controllers
             var questionList = new List<Question>(questionCount);
             for (var a = 1; a <= questionCount; ++a)
             {
-                questionList.Insert(a-1,questions[a.ToString()]);
+                questionList.Insert(a - 1, questions[a.ToString()]);
+                e.Questions = questionList;
             }
-            questionList.Reverse(); //fuck it
-            e.Questions = questionList;
             if (ModelState.IsValid)
+           
             {
                 db.Entry(e).State = EntityState.Modified;
                 db.SaveChanges();
