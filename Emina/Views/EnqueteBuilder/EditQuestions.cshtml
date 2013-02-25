@@ -249,7 +249,7 @@
         var val = parseInt(elem.val());
         val++;
         elem.val(val);
-        var row = "<tr id=\"Question_" + question + "_Answer_" + val + "_Row\"><td> - </td><td> <input type=\"text\" id=\"Question_" + question + "_Answer_" + val + "_Text\" name=\"Question_" + question + "_Answer_" + val + "_Text\" value=\"Antwoord " + val + "\" /> </td><td> - </td><td> - </td><td><select id='Question_" + question + "_Answer_" + val + "_Next' name='Question_" + question + "_Answer_" + val + "_Next'><option value='null'>Default</option>";
+        var row = "<tr id=\"Question_" + question + "_Answer_" + val + "_Row\"><td> - </td><td> <input type=\"text\" id=\"Question_" + question + "_Answer_" + val + "_Text\" name=\"Question_" + question + "_Answer_" + val + "_Text\" value=\"\" /> </td><td> - </td><td> - </td><td><select id='Question_" + question + "_Answer_" + val + "_Next' name='Question_" + question + "_Answer_" + val + "_Next'><option value='null'>Default</option>";
         for (a = 1; a < questionCount; ++a) {
             if (a == question) {
                 continue;

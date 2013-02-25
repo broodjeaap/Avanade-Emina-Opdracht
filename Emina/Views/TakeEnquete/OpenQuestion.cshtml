@@ -7,7 +7,7 @@
 <h1>@Model.Enquete.Name</h1>
 
 @using (Html.BeginForm()) {
-    <table>
+    <table class="QuestionTable">
         <thead>
             <tr>
                 <td>
@@ -30,7 +30,6 @@
                 <td>
                     @Html.HiddenFor(model => model.EnqueteID)
                     @Html.HiddenFor(model => model.QuestionID)
-                    @Html.HiddenFor(model => model.AnswerID)
                     @Html.HiddenFor(model => model.UserID)
                     <input type="submit" value="Next" />
                 </td>

@@ -1,7 +1,69 @@
-﻿@model Emina.Models.Question
+﻿@model Emina.Models.Answer
 
 @{
-    ViewBag.Title = "StarsQuestion";
+    ViewBag.Title = "Question";
 }
 
-<h2>StarsQuestion</h2>
+<h1>@Model.Enquete.Name</h1>
+
+@using (Html.BeginForm()) {
+    <table>
+        <thead>
+            <tr>
+                <td>
+                    Question @Model.Question.QuestionNumber out of @Model.Enquete.Questions.Count
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Model.Question.Text
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    1
+                </td>
+                <td>
+                    2
+                </td>
+                <td>
+                    3
+                </td>
+                <td>
+                    4
+                </td>
+                <td>
+                    5
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.RadioButtonFor(m => m.TextAnswer,1)
+                </td>
+                <td>
+                    @Html.RadioButtonFor(m => m.TextAnswer,2)
+                </td>
+                <td>
+                    @Html.RadioButtonFor(m => m.TextAnswer,3)
+                </td>
+                <td>
+                    @Html.RadioButtonFor(m => m.TextAnswer,4)
+                </td>
+                <td>
+                    @Html.RadioButtonFor(m => m.TextAnswer,5)
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.HiddenFor(model => model.EnqueteID)
+                    @Html.HiddenFor(model => model.QuestionID)
+                    @Html.HiddenFor(model => model.UserID)
+                    <input type="submit" value="Next" />
+                </td>
+            </tr>
+        </tbody>
+    </table>
+}
+

@@ -1,7 +1,51 @@
-﻿@model Emina.Models.Question
+﻿@model Emina.Models.Answer
 
 @{
-    ViewBag.Title = "GradeQuestion";
+    ViewBag.Title = "Question";
 }
 
-<h2>GradeQuestion</h2>
+<h1>@Model.Enquete.Name</h1>
+
+@using (Html.BeginForm()) {
+    <table>
+        <thead>
+            <tr>
+                <td>
+                    Question @Model.Question.QuestionNumber out of @Model.Enquete.Questions.Count
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Model.Question.Text
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <select name="TextAnswer">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.HiddenFor(model => model.EnqueteID)
+                    @Html.HiddenFor(model => model.QuestionID)
+                    @Html.HiddenFor(model => model.UserID)
+                    <input type="submit" value="Next" />
+                </td>
+            </tr>
+        </tbody>
+    </table>
+}
+

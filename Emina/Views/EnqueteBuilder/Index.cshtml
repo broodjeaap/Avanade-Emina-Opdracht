@@ -27,7 +27,10 @@
             End Date
         </th>
         <th>
-            
+            Take
+        </th>
+        <th>
+            Mailing
         </th>
     </tr>
     @foreach (var e in Model)
@@ -50,6 +53,9 @@
             </td>
             <td>
                 @Html.ActionLink("Edit", "EditEnquete", new { id = e.EnqueteID }) | @Html.ActionLink("Delete", "DeleteEnquete", new { id = e.EnqueteID })
+            </td>
+            <td>
+                @Html.ActionLink("Mailing", "Index", "Mailing", new { EnqueteID = e.EnqueteID }, new { })
             </td>
         </tr>
     }

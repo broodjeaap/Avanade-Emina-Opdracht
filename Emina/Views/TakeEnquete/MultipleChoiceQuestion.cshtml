@@ -1,4 +1,4 @@
-﻿@model Emina.Models.Question
+﻿@model Emina.Models.Answer
 
 @{
     ViewBag.Title = "Question";
@@ -6,26 +6,40 @@
 
 <h1>@Model.Enquete.Name</h1>
 
-@using (Html.BeginForm("Question", "TakeEnquete")) 
-{
+@using (Html.BeginForm()) {
     <table>
-        <caption><h2>@Model.Text</h2></caption>
-        @foreach (var pa in Model.PossibleAnswers)
+        <thead>
+            <tr>
+                <td>
+                    Question @Model.Question.QuestionNumber out of @Model.Enquete.Questions.Count
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Model.Question.Text
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var pa in Model.Question.PossibleAnswers)
         {
             <tr>
                 <td>
-                    @Html.RadioButton("Answer", pa.PossibleAnswerID)
+                    @Html.RadioButtonFor(a => Model.PossibleAnswerID, pa.PossibleAnswerID)
                 </td>
                 <td>
                     @pa.Text
                 </td>
             </tr>
         }
+            <tr>
+                <td>
+                    @Html.HiddenFor(model => model.EnqueteID)
+                    @Html.HiddenFor(model => model.QuestionID)
+                    @Html.HiddenFor(model => model.UserID)
+                    <input type="submit" value="Next" />
+                </td>
+            </tr>
+        </tbody>
     </table>
-
-    @Html.ValidationSummary(true)
-    <input type="submit" value="Next" />
-    @Html.HiddenFor(model => Model.EnqueteID)
-    @Html.HiddenFor(model => Model.QuestionID)
-    @Html.Hidden("NextQuestion", "True")
 }

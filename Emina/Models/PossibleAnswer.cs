@@ -10,10 +10,12 @@ namespace Emina.Models
     public class PossibleAnswer
     {
         public int PossibleAnswerID { get; set; }
+
         public int QuestionID { get; set; }
         public virtual Question Question { get; set; }
         public string Text { get; set; }
-        public virtual Question NextQuestion { get; set; }
+
         public int NextQuestionID { get; set; }
+        public virtual Question NextQuestion { get; set; }
     }
 }

@@ -1,17 +1,24 @@
-﻿@model Emina.Models.Question
+﻿@model Emina.Models.Answer
 
 @{
-    ViewBag.Title = "FuzzyBinaryQuestion";
+    ViewBag.Title = "Question";
 }
 
 <h2>FuzzyBinaryQuestion</h2>
-@using (Html.BeginForm("Question", "TakeEnquete", FormMethod.Post)){
-    <table class="FuzzyBinaryTable">
-        <caption>
-            <h2>
-                @Model.Text
-            </h2>
-        </caption>
+@using (Html.BeginForm()) {
+    <table class="QuestionTable">
+        <thead>
+            <tr>
+                <td>
+                    Question @Model.Question.QuestionNumber out of @Model.Enquete.Questions.Count
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Model.Question.Text
+                </td>
+            </tr>
+        </thead>
         <tr>
             <td>
                 --
@@ -46,8 +53,13 @@
                 <input type="radio" name="Answer" value="--"/>
             </td>
         </tr>
+        <tr>
+            <td>
+                @Html.HiddenFor(model => model.EnqueteID)
+                @Html.HiddenFor(model => model.QuestionID)
+                @Html.HiddenFor(model => model.UserID)
+                <input type="submit" value="Next" />
+            </td>
+        </tr>
     </table>
-    <input type="hidden" name="EnqueteID" value="@Model.EnqueteID" />
-    <input type="hidden" name="QuestionID" value="@Model.QuestionID" />
-    <input type="submit" value="Next" style="float:right"/>
 }

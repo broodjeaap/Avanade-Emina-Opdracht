@@ -14,7 +14,7 @@ namespace Emina.Models
         public string Name { get; set; }
 
         [Display(Name = "BirthDate")]
-        public DateTime BirthDate { get; set; }
+        public DateTime? BirthDate { get; set; }
 
         [Display(Name = "Address")]
         public string Address { get; set; }

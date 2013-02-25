@@ -135,6 +135,7 @@
     <Compile Include="Controllers\EnqueteController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InitializeSimpleMembership.cs" />
+    <Compile Include="Controllers\MailingController.cs" />
     <Compile Include="Controllers\PossibleAnswerController.cs" />
     <Compile Include="Controllers\QuestionController.cs" />
     <Compile Include="Controllers\TakeEnqueteController.cs" />
@@ -145,7 +146,7 @@
     <Compile Include="Models\Answer.cs" />
     <Compile Include="Models\EminaContext.cs" />
     <Compile Include="Models\Enquete.cs" />
-    <Compile Include="Models\ModelBuilder.cs" />
+    <Compile Include="Models\Enrollment.cs" />
     <Compile Include="Models\PossibleAnswer.cs" />
     <Compile Include="Models\Question.cs" />
     <Compile Include="Models\QuestionType.cs" />
@@ -276,6 +277,7 @@
     <Content Include="Views\EnqueteBuilder\NewEnquete.cshtml" />
     <Content Include="Views\EnqueteBuilder\EditEnquete.cshtml" />
     <Content Include="Views\EnqueteBuilder\EditQuestions.cshtml" />
+    <Content Include="Views\Mailing\Index.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

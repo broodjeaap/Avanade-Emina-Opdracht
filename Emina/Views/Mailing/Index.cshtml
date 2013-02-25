@@ -1,0 +1,78 @@
+﻿@model IEnumerable<Emina.Models.User>
+@{
+    ViewBag.Title = "Index";
+}
+
+<table>
+    <caption>
+        <h3>
+            Users that have been invited to partake in this enquete:
+        </h3>
+    </caption>
+    <tr>
+        <th>
+            Name
+        </th>
+        <th>
+            Gender
+        </th>
+        <th>
+            Address
+        </th>
+        <th>
+            Email
+        </th>
+        <th>
+            GUID
+        </th>
+        <th>
+            
+        </th>
+    </tr>
+    @foreach (var e in Model)
+    {
+        <tr>
+            <td>
+                @e.Name
+            </td>
+            <td>
+                @e.Gender
+            </td>
+            <td>
+                @e.Address
+            </td>
+            <td>
+                @e.Email
+            </td>
+            <td>
+                @e.GUID
+            </td>
+            <td>
+                @Html.ActionLink("Delete", "Delete", new { EnqueteID = ViewBag.EnqueteID, UserID = e.UserID }) | @Html.ActionLink("DebugUrl", "UrlLogin", "TakeEnquete", new { guid = e.GUID }, new { }) 
+            </td>
+        </tr>
+    }
+    @using (Html.BeginForm("Add","Mailing")) {
+    <tr>
+        <td>
+            <input type="text" name="Name" />
+        </td>
+        <td>
+            <input type="text" name="Gender" />
+        </td>
+        <td>
+            <input type="text" name="Address" />
+        </td>
+        <td>
+            <input type="text" name="Email" />
+        </td>
+        <td>
+            Only an email is required.
+            <input type="hidden" name="EnqueteID" value="@ViewBag.EnqueteID" />
+        </td>
+        <td>
+            <input type="submit" value="Add" />
+        </td>
+    </tr>
+    }
+</table>

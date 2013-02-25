@@ -12,9 +12,12 @@ namespace Emina.Models
         public DbSet<Question> Questions { get; set; }
         public DbSet<PossibleAnswer> PossibleAnswers { get; set; }
         public DbSet<Answer> Answers { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Enrollment> Enrollments { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            
             modelBuilder.Entity<Answer>()
                 .HasRequired(a => a.Enquete)
                 .WithRequiredDependent()
@@ -27,16 +30,7 @@ namespace Emina.Models
                 .HasRequired(a => a.PossibleAnswer)
                 .WithRequiredDependent()
                 .WillCascadeOnDelete(false);
-            /*
-            modelBuilder.Entity<PossibleAnswer>()
-                .HasRequired(a => a.Question)
-                .WithOptional()
-                .WillCascadeOnDelete(true);
-            modelBuilder.Entity<Question>()
-                .HasRequired(a => a.Enquete)
-                .WithOptional()
-                .WillCascadeOnDelete(true);
-             */
+            
         }
     }
 }
