@@ -38,7 +38,7 @@ namespace Emina.Filters
                         }
                     }
 
-                    WebSecurity.InitializeDatabaseConnection("EminaContext", "UserProfile", "UserId", "UserName", autoCreateTables: true);
+                    WebSecurity.InitializeDatabaseConnection("EminaContext", "Users", "UserID", "Email", autoCreateTables: true);
                 }
                 catch (Exception ex)
                 {

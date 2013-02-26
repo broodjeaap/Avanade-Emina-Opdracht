@@ -119,10 +119,12 @@
     <Reference Include="WebMatrix.Data, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\WebMatrix.Data.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="WebMatrix.WebData, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\WebMatrix.WebData.dll</HintPath>
+      <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -139,6 +141,7 @@
     <Compile Include="Controllers\PossibleAnswerController.cs" />
     <Compile Include="Controllers\QuestionController.cs" />
     <Compile Include="Controllers\TakeEnqueteController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -278,6 +281,8 @@
     <Content Include="Views\EnqueteBuilder\EditEnquete.cshtml" />
     <Content Include="Views\EnqueteBuilder\EditQuestions.cshtml" />
     <Content Include="Views\Mailing\Index.cshtml" />
+    <Content Include="Views\User\Index.cshtml" />
+    <Content Include="_AppStart.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
