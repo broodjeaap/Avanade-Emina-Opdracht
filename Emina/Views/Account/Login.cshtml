@@ -5,31 +5,53 @@
 }
 
 <section id="loginForm">
-<h2>Use a local account to log in.</h2>
-@using (Html.BeginForm()) {
+
+@using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl })) {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
-
-    <fieldset>
-        <legend>Log in Form</legend>
-        <ol>
-            <li>
+    <table>
+        <caption>
+            <h2>Use a local account to log in.</h2>
+        </caption>
+        <tr>
+            <td>
                 @Html.LabelFor(m => m.Email)
+            </td>
+            <td>
                 @Html.TextBoxFor(m => m.Email)
+            </td>
+            <td>
                 @Html.ValidationMessageFor(m => m.Email)
-            </li>
-            <li>
+            </td>
+        </tr>
+        <tr>
+            <td>
                 @Html.LabelFor(m => m.Password)
+            </td>
+            <td>
                 @Html.PasswordFor(m => m.Password)
+            </td>
+            <td>
                 @Html.ValidationMessageFor(m => m.Password)
-            </li>
-            <li>
+            </td>
+        </tr>
+        <tr>
+            <td>
                 @Html.CheckBoxFor(m => m.RememberMe)
+            </td>
+            <td>
                 @Html.LabelFor(m => m.RememberMe, new { @class = "checkbox" })
-            </li>
-        </ol>
-        <input type="submit" value="Log in" />
-    </fieldset>
+            </td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="submit" value="Log in" />
+            </td>
+        </tr>
+    </table>
     <p>
         @Html.ActionLink("Register", "Register") if you don't have an account.
     </p>

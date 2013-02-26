@@ -16,5 +16,7 @@ namespace Emina.Models
 
         public int UserID { get; set; }
         public User User { get; set; }
+
+        public EnrollmentRole role { get; set; }
     }
 }

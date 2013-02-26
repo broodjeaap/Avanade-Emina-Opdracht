@@ -8,6 +8,7 @@ using System.Web.Mvc;
 
 namespace Emina.Controllers
 {
+    [Authorize]
     public class EnqueteBuilderController : Controller
     {
         private EminaContext db = new EminaContext();

@@ -1,4 +1,5 @@
-﻿using Emina.Models;
+﻿using Emina.Filters;
+using Emina.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,13 +9,12 @@ using WebMatrix.WebData;
 
 namespace Emina.Controllers
 {
-    public class UserController : Controller
-    {
-        //
-        // GET: /User/
 
+    [Authorize]
+    public class AccountController : Controller
+    {
         [AllowAnonymous]
-        public ActionResult Index()
+        public ActionResult Login()
         {
             return View();
         }
@@ -23,19 +23,14 @@ namespace Emina.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult Index(LoginModel lm)
+        public ActionResult Login(LoginModel lm, string returnUrl)
         {
             if (ModelState.IsValid)
             {
                 WebSecurity.Login(lm.Email, lm.Password, persistCookie: lm.RememberMe);
-                return RedirectToAction("LoginResult");
+                return RedirectToLocal(returnUrl);
             }
             return RedirectToAction("Index");
-        }
-
-        public string LoginResult()
-        {
-            return "Woei "+ WebSecurity.CurrentUserName;
         }
 
         [AllowAnonymous]
@@ -51,10 +46,9 @@ namespace Emina.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Attempt to register the user
                 try
                 {
-                    WebSecurity.CreateUserAndAccount("test@test.com", "password");
+                    WebSecurity.CreateUserAndAccount(lm.Email, lm.Password);
                     WebSecurity.Login(lm.Email, lm.Password);
                     return RedirectToAction("Index", "Home");
                 }
@@ -63,15 +57,27 @@ namespace Emina.Controllers
                     throw new Exception("UserController "+e.Message);
                 }
             }
-
-            // If we got this far, something failed, redisplay form
-            //return View(lm);
-            return RedirectToAction("RegisterResult");
+            return View(lm);
         }
 
-        public string RegisterResult()
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult LogOff()
         {
-            return "Woei " + WebSecurity.CurrentUserName;
+            WebSecurity.Logout();
+            return RedirectToAction("Index");
+        }
+
+        private ActionResult RedirectToLocal(string returnUrl)
+        {
+            if (Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
     }
 }

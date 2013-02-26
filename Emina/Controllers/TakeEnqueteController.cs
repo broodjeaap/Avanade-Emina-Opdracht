@@ -5,9 +5,11 @@ using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using WebMatrix.WebData;
 
 namespace Emina.Controllers
 {
+    [Authorize]
     public class TakeEnqueteController : Controller
     {
         private EminaContext db = new EminaContext();
@@ -17,7 +19,8 @@ namespace Emina.Controllers
 
         public ActionResult Index()
         {
-            return View(db.Enquetes.ToList());//Where(enquete => enquete.StartDate <= DateTime.Now && enquete.EndDate > DateTime.Now)
+            var enrolledEnquetes = db.Enrollments.Where(e => e.UserID == WebSecurity.CurrentUserId).Select(e => e.UserID);
+            return View(db.Enquetes.Where(enquete => enquete.StartDate <= DateTime.Now && enquete.EndDate > DateTime.Now && enrolledEnquetes.Contains(enquete.EnqueteID)).ToList());
         }
 
         //
