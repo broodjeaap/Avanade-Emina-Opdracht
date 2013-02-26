@@ -28,7 +28,6 @@ namespace Emina.Controllers
             if (ModelState.IsValid)
             {
                 WebSecurity.Login(lm.Email, lm.Password, persistCookie: lm.RememberMe);
-
                 return RedirectToAction("LoginResult");
             }
             return RedirectToAction("Index");
@@ -36,8 +35,43 @@ namespace Emina.Controllers
 
         public string LoginResult()
         {
-            return "Woei "+ WebSecurity.IsAuthenticated;
+            return "Woei "+ WebSecurity.CurrentUserName;
         }
 
+        [AllowAnonymous]
+        public ActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public ActionResult Register(RegisterModel lm)
+        {
+            if (ModelState.IsValid)
+            {
+                // Attempt to register the user
+                try
+                {
+                    WebSecurity.CreateUserAndAccount("test@test.com", "password");
+                    WebSecurity.Login(lm.Email, lm.Password);
+                    return RedirectToAction("Index", "Home");
+                }
+                catch (Exception e)
+                {
+                    throw new Exception("UserController "+e.Message);
+                }
+            }
+
+            // If we got this far, something failed, redisplay form
+            //return View(lm);
+            return RedirectToAction("RegisterResult");
+        }
+
+        public string RegisterResult()
+        {
+            return "Woei " + WebSecurity.CurrentUserName;
+        }
     }
 }
