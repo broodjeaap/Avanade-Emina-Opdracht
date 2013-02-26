@@ -19,7 +19,7 @@ namespace Emina.Controllers
 
         public ActionResult Index()
         {
-            var enrolledEnquetes = db.Enrollments.Where(e => e.UserID == WebSecurity.CurrentUserId).Select(e => e.UserID);
+            var enrolledEnquetes = db.Enrollments.Where(e => e.UserID == WebSecurity.CurrentUserId).Select(e => e.EnqueteID);
             return View(db.Enquetes.Where(enquete => enquete.StartDate <= DateTime.Now && enquete.EndDate > DateTime.Now && enrolledEnquetes.Contains(enquete.EnqueteID)).ToList());
         }
 
@@ -103,9 +103,10 @@ namespace Emina.Controllers
             return RedirectToAction("Index");
         }
 
+        [AllowAnonymous]
         public ActionResult UrlLogin(string guid)
         {
-            //verification & login stuff
+            //
             return RedirectToAction("Index");
         }
     }

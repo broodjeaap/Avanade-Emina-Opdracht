@@ -50,14 +50,27 @@ namespace Emina.Controllers
                 {
                     WebSecurity.CreateUserAndAccount(lm.Email, lm.Password);
                     WebSecurity.Login(lm.Email, lm.Password);
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("RegisterGuid");
                 }
                 catch (Exception e)
                 {
-                    throw new Exception("UserController "+e.Message);
+                    throw new Exception("UserController: "+e.Message);
                 }
             }
             return View(lm);
+        }
+
+        private EminaContext db = new EminaContext();
+
+        public ActionResult RegisterGuid()
+        {
+            var u = db.Users.Find(WebSecurity.CurrentUserId);
+            if (u.GUID == null || "".Equals(u.GUID))
+            {
+                u.GUID = new Guid().ToString();
+                db.SaveChanges();
+            }
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]
@@ -65,7 +78,7 @@ namespace Emina.Controllers
         public ActionResult LogOff()
         {
             WebSecurity.Logout();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Home");
         }
 
         private ActionResult RedirectToLocal(string returnUrl)

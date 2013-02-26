@@ -132,14 +132,9 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\AnswerController.cs" />
     <Compile Include="Controllers\EnqueteBuilderController.cs" />
-    <Compile Include="Controllers\EnqueteController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\InitializeSimpleMembership.cs" />
     <Compile Include="Controllers\MailingController.cs" />
-    <Compile Include="Controllers\PossibleAnswerController.cs" />
-    <Compile Include="Controllers\QuestionController.cs" />
     <Compile Include="Controllers\TakeEnqueteController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
@@ -250,29 +245,9 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Enquete\Index.cshtml" />
-    <Content Include="Views\Enquete\Details.cshtml" />
-    <Content Include="Views\Enquete\Create.cshtml" />
-    <Content Include="Views\Enquete\Edit.cshtml" />
-    <Content Include="Views\Enquete\Delete.cshtml" />
     <Content Include="Views\TakeEnquete\Index.cshtml" />
     <Content Include="Views\TakeEnquete\OpenQuestion.cshtml" />
-    <Content Include="Views\PossibleAnswer\Index.cshtml" />
-    <Content Include="Views\PossibleAnswer\Details.cshtml" />
-    <Content Include="Views\PossibleAnswer\Create.cshtml" />
-    <Content Include="Views\PossibleAnswer\Edit.cshtml" />
-    <Content Include="Views\PossibleAnswer\Delete.cshtml" />
-    <Content Include="Views\Answer\Index.cshtml" />
-    <Content Include="Views\Answer\Details.cshtml" />
-    <Content Include="Views\Answer\Create.cshtml" />
-    <Content Include="Views\Answer\Edit.cshtml" />
-    <Content Include="Views\Answer\Delete.cshtml" />
     <Content Include="Views\Home\Login.cshtml" />
-    <Content Include="Views\Question\Index.cshtml" />
-    <Content Include="Views\Question\Details.cshtml" />
-    <Content Include="Views\Question\Create.cshtml" />
-    <Content Include="Views\Question\Edit.cshtml" />
-    <Content Include="Views\Question\Delete.cshtml" />
     <Content Include="Views\TakeEnquete\MultipleChoiceQuestion.cshtml" />
     <Content Include="Views\TakeEnquete\CheckboxQuestion.cshtml" />
     <Content Include="Views\TakeEnquete\StarsQuestion.cshtml" />
@@ -287,6 +262,7 @@
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="_AppStart.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Shared\_LoginPartial.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

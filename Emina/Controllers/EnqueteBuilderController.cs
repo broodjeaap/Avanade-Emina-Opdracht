@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using WebMatrix.WebData;
 
 namespace Emina.Controllers
 {
@@ -32,6 +33,11 @@ namespace Emina.Controllers
             if(ModelState.IsValid)
             {
                 db.Enquetes.Add(enquete);
+                var e = new Enrollment();
+                e.EnqueteID = enquete.EnqueteID;
+                e.role = EnrollmentRole.Owner;
+                e.UserID = WebSecurity.CurrentUserId;
+                db.Enrollments.Add(e);
                 db.SaveChanges();
             }
             return RedirectToAction("Index");
@@ -39,6 +45,10 @@ namespace Emina.Controllers
 
         public ActionResult DeleteEnquete(int id)
         {
+            if (!db.Enrollments.Where(e => e.UserID == WebSecurity.CurrentUserId && e.role == EnrollmentRole.Owner).Select(e => e.EnqueteID).Contains(id))
+            {
+                return RedirectToAction("Index", "EnqueteBuilder");
+            }
             var enquete = db.Enquetes.Find(id);
             if (enquete != null)
             {
@@ -50,6 +60,10 @@ namespace Emina.Controllers
 
         public ActionResult EditEnquete(int id)
         {
+            if (!db.Enrollments.Where(en => en.UserID == WebSecurity.CurrentUserId && en.role == EnrollmentRole.Owner).Select(en => en.EnqueteID).Contains(id))
+            {
+                return RedirectToAction("Index", "EnqueteBuilder");
+            }
             var e = db.Enquetes.Find(id);
             if (e != null)
             {
@@ -60,6 +74,10 @@ namespace Emina.Controllers
 
         public ActionResult EditQuestions(int id)
         {
+            if (!db.Enrollments.Where(e => e.UserID == WebSecurity.CurrentUserId && e.role == EnrollmentRole.Owner).Select(e => e.EnqueteID).Contains(id))
+            {
+                return RedirectToAction("Index", "EnqueteBuilder");
+            }
             var Enquete = db.Enquetes.Find(id);
             if (Enquete == null)
             {
@@ -83,6 +101,10 @@ namespace Emina.Controllers
         public ActionResult EditQuestions(FormCollection collection)
         {
             Enquete e = db.Enquetes.Find(int.Parse(collection["Enquete_id"]));
+            if (!db.Enrollments.Where(en => en.UserID == WebSecurity.CurrentUserId && en.role == EnrollmentRole.Owner).Select(en => en.EnqueteID).Contains(e.EnqueteID))
+            {
+                return RedirectToAction("Index", "EnqueteBuilder");
+            }
             foreach(Question q in e.Questions)
             {
                 if (q.Type == QuestionType.Checkbox || q.Type == QuestionType.MultipleChoice)

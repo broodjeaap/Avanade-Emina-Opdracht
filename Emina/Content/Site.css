@@ -325,3 +325,7 @@ tr:hover
 {
 	background-color: #fff;
 }
+
+.float-right {
+    float: right;
+}

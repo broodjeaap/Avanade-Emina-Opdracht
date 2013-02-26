@@ -11,25 +11,40 @@
 @using (Html.BeginForm()) {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary()
-
-    <fieldset>
-        <legend>Registration Form</legend>
-        <ol>
-            <li>
+    <table>
+        <caption>
+            <h2>Use a local account to log in.</h2>
+        </caption>
+        <tr>
+            <td>
                 @Html.LabelFor(m => m.Email)
+            </td>
+            <td>
                 @Html.TextBoxFor(m => m.Email)
-            </li>
-            <li>
+            </td>
+        </tr>
+        <tr>
+            <td>
                 @Html.LabelFor(m => m.Password)
+            </td>
+            <td>
                 @Html.PasswordFor(m => m.Password)
-            </li>
-            <li>
+            </td>
+        </tr>
+        <tr>
+            <td>
                 @Html.LabelFor(m => m.ConfirmPassword)
+            </td>
+            <td>
                 @Html.PasswordFor(m => m.ConfirmPassword)
-            </li>
-        </ol>
-        <input type="submit" value="Register" />
-    </fieldset>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="submit" value="Log in" />
+            </td>
+        </tr>
+    </table>
 }
 
 @section Scripts {
