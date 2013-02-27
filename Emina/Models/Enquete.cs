@@ -32,7 +32,5 @@ namespace Emina.Models
         public DateTime? EndDate { get; set; }
 
         public virtual ICollection<Question> Questions { get; set; }
-
-        public virtual ICollection<Answer> answers { get; set; }
     }
 }

@@ -34,6 +34,7 @@ namespace Emina.Controllers
                 var q = (from question in e.Questions where question.QuestionNumber == QuestionNumber select question).First();
                 if (q != null)
                 {
+                    
                     var userId = WebSecurity.CurrentUserId;
                     var answers = db.Answers.Where(a => a.EnqueteID == EnqueteID && a.QuestionID == q.QuestionID && a.UserID == userId);
                     Answer answer;
@@ -43,7 +44,6 @@ namespace Emina.Controllers
                         answer.EnqueteID = e.EnqueteID;
                         answer.Enquete = e;
                         answer.QuestionID = q.QuestionID;
-                        answer.Question = q;
                         answer.UserID = userId;
                         //answer.User = user;
                     }
@@ -53,10 +53,10 @@ namespace Emina.Controllers
                         answer.EnqueteID = e.EnqueteID; //entity framework \o/
                         answer.Enquete = e;
                         answer.QuestionID = q.QuestionID;
-                        answer.Question = q;
                         answer.UserID = userId;
                         //answer.User = user;
                     }
+                     
                     //System.Diagnostics.Debug.WriteLine(q.Type.ToString() + "Question" + ", eid = " + EnqueteID + ", qid = " + QuestionId);
                     return View(q.Type.ToString() + "Question", answer);
                 }
@@ -80,7 +80,6 @@ namespace Emina.Controllers
                     db.Answers.Add(answer);
                 }
                 db.SaveChanges();
-
                 var currentQ = db.Questions.Find(answer.QuestionID);
                 if (currentQ.Type == QuestionType.MultipleChoice || currentQ.Type == QuestionType.Checkbox)
                 {
@@ -90,6 +89,7 @@ namespace Emina.Controllers
                         return RedirectToAction("Question", new { EnqueteID = nextQ.EnqueteID, QuestionNumber = nextQ.NextQuestion.QuestionNumber });
                     }
                 }
+                
                 if (currentQ.NextQuestion != null)
                 {
                     return RedirectToAction("Question", new { EnqueteID = currentQ.EnqueteID, QuestionNumber = currentQ.NextQuestion.QuestionNumber });

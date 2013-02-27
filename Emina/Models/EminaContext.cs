@@ -17,20 +17,22 @@ namespace Emina.Models
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            //modelBuilder.Entity<Answer>().
+            /*
+            modelBuilder.Entity<Answer>()
+                .HasRequired(a => a.Question)
+                .WithRequiredDependent()
+                .WillCascadeOnDelete(false);
             
             modelBuilder.Entity<Answer>()
                 .HasRequired(a => a.Enquete)
                 .WithRequiredDependent()
                 .WillCascadeOnDelete(false);
             modelBuilder.Entity<Answer>()
-                .HasRequired(a => a.Question)
-                .WithRequiredDependent()
-                .WillCascadeOnDelete(false);
-            modelBuilder.Entity<Answer>()
                 .HasRequired(a => a.PossibleAnswer)
                 .WithRequiredDependent()
                 .WillCascadeOnDelete(false);
-            
+            */
         }
     }
 }
