@@ -126,6 +126,9 @@ namespace Emina.Controllers
             {
                 WebSecurity.Login(lm.Email, "heelErgGeheimPasswordWatNiemandMagWeten");
                 WebSecurity.ChangePassword(lm.Email, "heelErgGeheimPasswordWatNiemandMagWeten", lm.Password);
+                var u = db.Users.Find(WebSecurity.CurrentUserId);
+                u.GUID = null;
+                db.SaveChanges();
                 return RedirectToAction("Index", "TakeEnquete");
             }
             return RedirectToAction("Index", "Account");

@@ -132,6 +132,10 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\Api\AnswerController.cs" />
+    <Compile Include="Controllers\Api\EnqueteController.cs" />
+    <Compile Include="Controllers\Api\PossibleAnswerController.cs" />
+    <Compile Include="Controllers\Api\QuestionController.cs" />
     <Compile Include="Controllers\EnqueteBuilderController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MailingController.cs" />
