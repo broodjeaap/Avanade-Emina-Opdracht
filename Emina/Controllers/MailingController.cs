@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using WebMatrix.WebData;
@@ -27,18 +28,15 @@ namespace Emina.Controllers
             {
                 return RedirectToAction("Index", "EnqueteBuilder");
             }
-            var users = db.Users.Where(u => u.Email.Equals(user.Email));
-            if (users.Count() == 0)
+            if (!WebSecurity.UserExists(user.Email))
             {
+                WebSecurity.CreateUserAndAccount(user.Email, "heelErgGeheimPasswordWatNiemandMagWeten");
+                user = db.Users.Where(u => u.Email == user.Email).First();
                 user.GUID = Guid.NewGuid().ToString();
-                user.UserID = (((int?)db.Users.Max(u => u.UserID) ?? 0) + 1); //blegh
-                db.Users.Add(user);
-                db.SaveChanges();
             }
             else
             {
-                user = users.First();
-                
+                user = db.Users.Where(u => u.Email.Equals(user.Email)).First();
             }
             if (user.BirthDate != null)
             {
@@ -54,6 +52,18 @@ namespace Emina.Controllers
             db.Enrollments.Add(e);
             db.SaveChanges();
             return RedirectToAction("Index", new { EnqueteID = EnqueteID } );
+        }
+
+        private Random r = new Random();
+
+        public string getRandomPassword(int length)
+        {
+            var sb = new StringBuilder(length);
+            for (var a = 0; a < sb.Capacity; ++a)
+            {
+                sb.Append((char)(r.Next(26) + 65));
+            }
+            return sb.ToString();
         }
 
         public ActionResult Delete(int EnqueteID, int UserID)

@@ -19,7 +19,8 @@ namespace Emina.Controllers
 
         public ActionResult Index()
         {
-            return View(db.Enquetes.ToList());
+            var ownedEnquetes = db.Enrollments.Where(e => e.UserID == WebSecurity.CurrentUserId && e.role == EnrollmentRole.Owner).Select(e => e.EnqueteID);
+            return View(db.Enquetes.Where(e => ownedEnquetes.Contains(e.EnqueteID)));
         }
 
         public ActionResult NewEnquete()

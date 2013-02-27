@@ -50,7 +50,7 @@ namespace Emina.Controllers
                 {
                     WebSecurity.CreateUserAndAccount(lm.Email, lm.Password);
                     WebSecurity.Login(lm.Email, lm.Password);
-                    return RedirectToAction("RegisterGuid");
+                    return RedirectToAction("Index", "TakeEnquete");
                 }
                 catch (Exception e)
                 {
@@ -58,19 +58,6 @@ namespace Emina.Controllers
                 }
             }
             return View(lm);
-        }
-
-        private EminaContext db = new EminaContext();
-
-        public ActionResult RegisterGuid()
-        {
-            var u = db.Users.Find(WebSecurity.CurrentUserId);
-            if (u.GUID == null || "".Equals(u.GUID))
-            {
-                u.GUID = new Guid().ToString();
-                db.SaveChanges();
-            }
-            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]

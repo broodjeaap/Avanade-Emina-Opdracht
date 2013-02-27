@@ -1,11 +1,12 @@
 ﻿@model Emina.Models.RegisterModel
+
 @{
-    ViewBag.Title = "Register";
+    ViewBag.Title = "Create your account";
 }
 
 <hgroup class="title">
-    <h1>@ViewBag.Title.</h1>
-    <h2>Create a new account.</h2>
+    <h1>@ViewBag.Title</h1>
+    <h2>Complete your invite.</h2>
 </hgroup>
 
 @using (Html.BeginForm()) {
@@ -17,15 +18,8 @@
         </caption>
         <tr>
             <td>
-                @Html.LabelFor(m => m.Email)
-            </td>
-            <td>
-                @Html.TextBoxFor(m => m.Email)
-            </td>
-        </tr>
-        <tr>
-            <td>
                 @Html.LabelFor(m => m.Password)
+                @Html.HiddenFor(m => m.Email)
             </td>
             <td>
                 @Html.PasswordFor(m => m.Password)
@@ -41,7 +35,7 @@
         </tr>
         <tr>
             <td>
-                <input type="submit" value="Log in" />
+                <input type="submit" value="Create" />
             </td>
             <td>
 

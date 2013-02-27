@@ -19,7 +19,7 @@ namespace Emina.Controllers
 
         public ActionResult Index()
         {
-            var enrolledEnquetes = db.Enrollments.Where(e => e.UserID == WebSecurity.CurrentUserId).Select(e => e.EnqueteID);
+            var enrolledEnquetes = db.Enrollments.Where(e => e.UserID == WebSecurity.CurrentUserId && e.role == EnrollmentRole.User).Select(e => e.EnqueteID);
             return View(db.Enquetes.Where(enquete => enquete.StartDate <= DateTime.Now && enquete.EndDate > DateTime.Now && enrolledEnquetes.Contains(enquete.EnqueteID)).ToList());
         }
 
@@ -34,7 +34,7 @@ namespace Emina.Controllers
                 var q = (from question in e.Questions where question.QuestionNumber == QuestionNumber select question).First();
                 if (q != null)
                 {
-                    var userId = 1; //todo
+                    var userId = WebSecurity.CurrentUserId;
                     var answers = db.Answers.Where(a => a.EnqueteID == EnqueteID && a.QuestionID == q.QuestionID && a.UserID == userId);
                     Answer answer;
                     if (answers.Count() == 0)
@@ -106,8 +106,29 @@ namespace Emina.Controllers
         [AllowAnonymous]
         public ActionResult UrlLogin(string guid)
         {
-            //
-            return RedirectToAction("Index");
+            var users = db.Users.Where(u => u.GUID.Equals(guid));
+            if (users.Count() != 0)
+            {
+                var lm = new RegisterModel();
+                var u = users.First();
+                lm.Email = u.Email;
+                return View(lm);
+            }
+            return RedirectToAction("Index","Account");
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public ActionResult UrlLogin(LoginModel lm)
+        {
+            if (WebSecurity.UserExists(lm.Email))
+            {
+                WebSecurity.Login(lm.Email, "heelErgGeheimPasswordWatNiemandMagWeten");
+                WebSecurity.ChangePassword(lm.Email, "heelErgGeheimPasswordWatNiemandMagWeten", lm.Password);
+                return RedirectToAction("Index", "TakeEnquete");
+            }
+            return RedirectToAction("Index", "Account");
         }
     }
 }
