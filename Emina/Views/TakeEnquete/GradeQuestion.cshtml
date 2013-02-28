@@ -2,6 +2,8 @@
 
 @{
     ViewBag.Title = "Question";
+    var range = new string[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
+    
 }
 
 <h1>@Model.Enquete.Name</h1>
@@ -11,12 +13,12 @@
         <thead>
             <tr>
                 <td>
-                    Question @Model.Question.QuestionNumber out of @Model.Enquete.Questions.Count
+                    Question @ViewBag.Question.QuestionNumber out of @Model.Enquete.Questions.Count
                 </td>
             </tr>
             <tr>
                 <td>
-                    @Model.Question.Text
+                    @ViewBag.Question.Text
                 </td>
             </tr>
         </thead>
@@ -24,16 +26,15 @@
             <tr>
                 <td>
                     <select name="TextAnswer">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                        <option value="10">10</option>
+                        @foreach (var i in range)
+                        {
+                            if(i.Equals(Model.TextAnswer)){
+                                <option value="@i" selected="selected">@i</option>
+                            } else {
+                                <option value="@i">@i</option>
+                            }
+                        }
+                        
                     </select>
                 </td>
             </tr>

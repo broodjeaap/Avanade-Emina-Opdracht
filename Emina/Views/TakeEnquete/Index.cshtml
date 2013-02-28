@@ -35,7 +35,13 @@
                 @Html.DisplayFor(modelItem => e.Questions.Count)
             </td>
             <td>
-                @Html.ActionLink("Start", "Question", new { EnqueteId = e.EnqueteID, QuestionNumber = e.Questions.OrderBy(q => q.QuestionNumber).First().QuestionNumber})
+                @if(e.Questions.Count > 0){
+                    @Html.ActionLink("Start", "Question", new { EnqueteId = e.EnqueteID, QuestionNumber = e.Questions.OrderBy(q => q.QuestionNumber).First().QuestionNumber})
+                } else {
+                    <text>
+                        No questions
+                    </text>   
+                }
             </td>
         </tr>
     }

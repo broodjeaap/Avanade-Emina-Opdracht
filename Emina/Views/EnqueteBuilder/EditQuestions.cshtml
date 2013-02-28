@@ -176,53 +176,61 @@
     <input type="hidden" value="0" id="questionCount" name="questionCount" />
     <input id="Enquete_id" type="hidden" value="@Model.EnqueteID" name="Enquete_id" />
     <input type="submit" value="Save" />
+    <p style="font-family:arial;color:red;font-size:20px;">Warning: Editing an Enquete may result in los of (previously) answered questions.</p>
     <br /><br />
 }
 
 <script type="text/javascript">
     var questionTypes = new Array();
-    @foreach(var questionType in ViewBag.QuestionTypes){
-        @Html.Raw("    questionTypes.push(\""+questionType+"\");\n");   
+    @foreach (var questionType in ViewBag.QuestionTypes)
+    {
+        @Html.Raw("    questionTypes.push(\"" + questionType + "\");\n");
     }
     var questionCount = 1;
     var questions = new Array();
     var answerCount = 1;
 
     $(document).ready(function () {
-        @foreach(var question in Model.Questions){
+        @foreach (var question in Model.Questions)
+        {
             @Html.Raw(
-            "       tmp = new Object(); \n"+
-            "       tmp.text = \""+question.Text+"\";\n"+
-            "       tmp.type = \""+question.Type+"\";\n"
+            "       tmp = new Object(); \n" +
+            "       tmp.text = \"" + question.Text + "\";\n" +
+            "       tmp.type = \"" + question.Type + "\";\n"
             );
 
-            if (question.NextQuestion != null)
-            {
-                @Html.Raw("       tmp.next = " + question.NextQuestion.QuestionNumber+";\n")
-                @Html.Raw("       $(\"#Question_\"+questionCount+\"_Next\").val(\"" + question.NextQuestion.QuestionNumber+"\");\n");
-            }
-            else
-            {
+             if (question.NextQuestion != null)
+             {
+                @Html.Raw("       tmp.next = " + question.NextQuestion.QuestionNumber + ";\n")
+                @Html.Raw("       $(\"#Question_\"+questionCount+\"_Next\").val(\"" + question.NextQuestion.QuestionNumber + "\");\n");
+             }
+             else
+             {
                 @Html.Raw("       tmp.next = null;\n");
                 @Html.Raw("       $(\"#Question_\" + questionCount + \"_Next\").val(\"None\");\n");
-            }
-            if(ViewBag.PossibleAnswers.ContainsKey(question.QuestionNumber)){
+             }
+             if (ViewBag.PossibleAnswers.ContainsKey(question.QuestionNumber))
+             {
                 @Html.Raw("       tmp.answers = new Array();\n");
                 @Html.Raw("       answerCount = 1;\n");
-                foreach(var pa in ViewBag.PossibleAnswers[question.QuestionNumber]){
+                                                      foreach (var pa in ViewBag.PossibleAnswers[question.QuestionNumber])
+                                                      {
                     @Html.Raw("       answer = new Object();\n");
                     @Html.Raw("       answer.text = \"" + pa.Text + "\";\n");
-                    if(pa.NextQuestion != null){
+                                                                            if (pa.NextQuestion != null)
+                                                                            {
                         @Html.Raw("       $(\"#Question_\" + questionCount + \"_Answer_\" + answerCount + \"_Next\").val(\"" + pa.NextQuestion.QuestionNumber + "\");\n");
                         @Html.Raw("       answer.next = " + pa.NextQuestion.QuestionNumber + ";\n");
-                    } else {
+                                                                            }
+                                                                            else
+                                                                            {
                         @Html.Raw("       answer.next = null;\n");
-                    }
+                                                                            }
                     @Html.Raw("       tmp.answers.push(answer);\n");
                     @Html.Raw("       answerCount++;\n");
-                }
+                                                      }
                 @Html.Raw("       tmp.answerCount = answerCount;\n");
-            }
+             }
             @Html.Raw("      questions[questionCount++] = tmp;\n");
         }
         $("#questionCount").val(questionCount);

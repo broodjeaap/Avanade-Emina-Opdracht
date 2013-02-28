@@ -38,6 +38,7 @@ namespace Emina.Controllers
                     var userId = WebSecurity.CurrentUserId;
                     var answers = db.Answers.Where(a => a.EnqueteID == EnqueteID && a.QuestionID == q.QuestionID && a.UserID == userId);
                     Answer answer;
+                    List<int> answered = new List<int>();
                     if (answers.Count() == 0)
                     {
                         answer = new Answer();
@@ -45,7 +46,6 @@ namespace Emina.Controllers
                         answer.Enquete = e;
                         answer.QuestionID = q.QuestionID;
                         answer.UserID = userId;
-                        //answer.User = user;
                     }
                     else
                     {
@@ -54,10 +54,18 @@ namespace Emina.Controllers
                         answer.Enquete = e;
                         answer.QuestionID = q.QuestionID;
                         answer.UserID = userId;
-                        //answer.User = user;
+                        if (q.Type == QuestionType.Checkbox)
+                        {
+                            var split = answer.TextAnswer.Split(';');
+                            foreach (string s in split)
+                            {
+                                answered.Add(int.Parse(s));
+                            }
+                        }
                     }
-                     
-                    //System.Diagnostics.Debug.WriteLine(q.Type.ToString() + "Question" + ", eid = " + EnqueteID + ", qid = " + QuestionId);
+                    ViewBag.answered = answered;
+                    ViewBag.Question = q;
+                    
                     return View(q.Type.ToString() + "Question", answer);
                 }
             }
@@ -74,19 +82,34 @@ namespace Emina.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (db.Answers.Find(answer.AnswerID) == null)
+                var answers = db.Answers.Where(a => a.EnqueteID == answer.EnqueteID && a.QuestionID == answer.QuestionID && a.UserID == WebSecurity.CurrentUserId);
+                var currentQ = db.Questions.Find(answer.QuestionID);
+                if (answers.Count() == 0)
                 {
                     answer.AnswerID = ((db.Answers.Max(a => (int?)a.AnswerID) ?? 0) + 1); //soooo pretty
                     db.Answers.Add(answer);
                 }
-                db.SaveChanges();
-                var currentQ = db.Questions.Find(answer.QuestionID);
-                if (currentQ.Type == QuestionType.MultipleChoice || currentQ.Type == QuestionType.Checkbox)
+                else
                 {
-                    var nextQ = db.Questions.Find(answer.PossibleAnswer.NextQuestionID);
+                    var an = answers.First();
+                    if (currentQ.Type == QuestionType.MultipleChoice)
+                    {
+                        an.PossibleAnswerID = answer.PossibleAnswerID;
+                    }
+                    else
+                    {
+                        an.TextAnswer = answer.TextAnswer;
+                    }
+                }
+                db.SaveChanges();
+                
+                if (currentQ.Type == QuestionType.MultipleChoice)
+                {
+                    var pa = db.PossibleAnswers.Find(answer.PossibleAnswerID);
+                    var nextQ = db.Questions.Find(pa.NextQuestionID); //entity framework \o/
                     if (nextQ != null)
                     {
-                        return RedirectToAction("Question", new { EnqueteID = nextQ.EnqueteID, QuestionNumber = nextQ.NextQuestion.QuestionNumber });
+                        return RedirectToAction("Question", new { EnqueteID = nextQ.EnqueteID, QuestionNumber = nextQ.QuestionNumber });
                     }
                 }
                 
@@ -106,6 +129,11 @@ namespace Emina.Controllers
         [AllowAnonymous]
         public ActionResult UrlLogin(string guid)
         {
+            if (WebSecurity.IsAuthenticated)
+            {
+                WebSecurity.Logout();
+                return RedirectToAction("UrlLogin");
+            }
             var users = db.Users.Where(u => u.GUID.Equals(guid));
             if (users.Count() != 0)
             {
@@ -124,14 +152,19 @@ namespace Emina.Controllers
         {
             if (WebSecurity.UserExists(lm.Email))
             {
-                WebSecurity.Login(lm.Email, "heelErgGeheimPasswordWatNiemandMagWeten");
                 WebSecurity.ChangePassword(lm.Email, "heelErgGeheimPasswordWatNiemandMagWeten", lm.Password);
-                var u = db.Users.Find(WebSecurity.CurrentUserId);
-                u.GUID = null;
-                db.SaveChanges();
-                return RedirectToAction("Index", "TakeEnquete");
+                WebSecurity.Login(lm.Email, lm.Password);
+                return RedirectToAction("RemoveGuid", "TakeEnquete");
             }
             return RedirectToAction("Index", "Account");
+        }
+
+        public ActionResult RemoveGuid()
+        {
+            var u = db.Users.Find(WebSecurity.CurrentUserId);
+            u.GUID = null;
+            db.SaveChanges();
+            return RedirectToAction("Index", "TakeEnquete");
         }
     }
 }

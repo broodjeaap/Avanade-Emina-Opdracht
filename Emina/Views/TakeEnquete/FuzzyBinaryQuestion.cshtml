@@ -10,12 +10,36 @@
         <thead>
             <tr>
                 <td>
-                    Question @Model.Question.QuestionNumber out of @Model.Enquete.Questions.Count
+                    Question @ViewBag.Question.QuestionNumber out of @Model.Enquete.Questions.Count
+                </td>
+                <td>
+
+                </td>
+                <td>
+
+                </td>
+                <td>
+
+                </td>
+                <td>
+
                 </td>
             </tr>
             <tr>
                 <td>
-                    @Model.Question.Text
+                    @ViewBag.Question.Text
+                </td>
+                <td>
+
+                </td>
+                <td>
+
+                </td>
+                <td>
+
+                </td>
+                <td>
+
                 </td>
             </tr>
         </thead>
@@ -59,6 +83,18 @@
                 @Html.HiddenFor(model => model.QuestionID)
                 @Html.HiddenFor(model => model.UserID)
                 <input type="submit" value="Next" />
+            </td>
+            <td>
+
+            </td>
+            <td>
+
+            </td>
+            <td>
+
+            </td>
+            <td>
+
             </td>
         </tr>
     </table>

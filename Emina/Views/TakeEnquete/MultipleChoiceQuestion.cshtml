@@ -11,7 +11,7 @@
         <thead>
             <tr>
                 <td>
-                    Question @Model.Question.QuestionNumber out of @Model.Enquete.Questions.Count
+                    Question @ViewBag.Question.QuestionNumber out of @Model.Enquete.Questions.Count
                 </td>
                 <td>
 
@@ -19,7 +19,7 @@
             </tr>
             <tr>
                 <td>
-                    @Model.Question.Text
+                    @ViewBag.Question.Text
                 </td>
                 <td>
 
@@ -27,11 +27,15 @@
             </tr>
         </thead>
         <tbody>
-        @foreach (var pa in Model.Question.PossibleAnswers)
+        @foreach (var pa in ViewBag.Question.PossibleAnswers)
         {
             <tr>
                 <td>
-                    @Html.RadioButtonFor(a => Model.PossibleAnswerID, pa.PossibleAnswerID)
+                    @if(pa.PossibleAnswerID == Model.PossibleAnswerID){
+                        <input type ="radio" name="PossibleAnswerID" value="@pa.PossibleAnswerID" checked="checked"/>
+                    } else {
+                        <input type ="radio" name="PossibleAnswerID" value="@pa.PossibleAnswerID" />   
+                    }
                 </td>
                 <td>
                     @pa.Text

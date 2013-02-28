@@ -150,7 +150,7 @@ namespace Emina.Controllers
                     q.NextQuestionID = questions[tmp+""].QuestionID;
                     q.NextQuestion = questions[tmp+""];
                 }
-                if (q.Type == QuestionType.MultipleChoice || q.Type == QuestionType.Checkbox) // type == multiplechoice || type == checkbox
+                if (q.Type == QuestionType.MultipleChoice) // type == multiplechoice
                 {
                     var answerCount = int.Parse(collection["Question_" + a + "_AnswerCount"]);
                     List<PossibleAnswer> possibleAnswers = new List<PossibleAnswer>();
@@ -165,15 +165,11 @@ namespace Emina.Controllers
                         }
                         else
                         {
-                            if (int.TryParse(collection["Question_" + a + "_Next"], out tmp))
-                            {
-                                possibleAnswer.NextQuestionID = questions[a + ""].QuestionID;
-                                possibleAnswer.NextQuestion = questions[a + ""];
-                            }
-                            
+                            possibleAnswer.NextQuestionID = q.NextQuestionID;
+                            possibleAnswer.NextQuestion = q;
                         }
-                        possibleAnswer.QuestionID = questions[a.ToString()].QuestionID;
-                        possibleAnswer.Question = questions[a.ToString()];
+                        possibleAnswer.QuestionID = q.QuestionID;
+                        possibleAnswer.Question = q;
                         possibleAnswers.Add(possibleAnswer);
                     }
                     q.PossibleAnswers = possibleAnswers;

@@ -24,7 +24,7 @@ namespace Emina.Models
         //public virtual Question Question { get; set; }
 
         public int PossibleAnswerID { get; set; }
-        public virtual PossibleAnswer PossibleAnswer { get; set; }
+        //public virtual PossibleAnswer PossibleAnswer { get; set; }
 
         public string TextAnswer { get; set; }
          
