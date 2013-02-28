@@ -106,7 +106,21 @@ namespace Emina.Controllers
                 if (currentQ.Type == QuestionType.MultipleChoice)
                 {
                     var pa = db.PossibleAnswers.Find(answer.PossibleAnswerID);
+                    if (pa.NextQuestionID == 0) //what
+                    {
+                        if(pa.NextQuestion != null) //the 
+                        {
+                            pa.NextQuestionID = pa.NextQuestion.QuestionID; //fuck
+                        }
+                    }
                     var nextQ = db.Questions.Find(pa.NextQuestionID); //entity framework \o/
+                    if (nextQ.QuestionID == currentQ.QuestionID)
+                    {
+                        if (nextQ != null)
+                        {
+                            nextQ.QuestionNumber++;
+                        }
+                    }
                     if (nextQ != null)
                     {
                         return RedirectToAction("Question", new { EnqueteID = nextQ.EnqueteID, QuestionNumber = nextQ.QuestionNumber });

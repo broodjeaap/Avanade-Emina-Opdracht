@@ -150,7 +150,7 @@ namespace Emina.Controllers
                     q.NextQuestionID = questions[tmp+""].QuestionID;
                     q.NextQuestion = questions[tmp+""];
                 }
-                if (q.Type == QuestionType.MultipleChoice) // type == multiplechoice
+                if (q.Type == QuestionType.MultipleChoice || q.Type == QuestionType.Checkbox) // type == multiplechoice
                 {
                     var answerCount = int.Parse(collection["Question_" + a + "_AnswerCount"]);
                     List<PossibleAnswer> possibleAnswers = new List<PossibleAnswer>();
