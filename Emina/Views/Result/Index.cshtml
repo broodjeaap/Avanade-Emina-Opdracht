@@ -1,0 +1,43 @@
+﻿@model IEnumerable<Emina.Models.Answer>
+
+@{
+    ViewBag.Title = "Index";
+    var answers = ViewBag.answers;
+    var questions = ViewBag.Questions;
+}
+
+<table>
+    @foreach (var q in questions)
+    {
+        <tr>
+            <td>
+                @q.QuestionNumber
+            </td>
+            <td>
+                @q.Text
+            </td>
+            <td>
+                
+            </td>
+            <td>
+
+            </td>
+        </tr>
+        foreach(var a in answers[q.QuestionNumber]){
+            <tr class="darkerRow">
+                <td>
+
+                </td>
+                <td>
+                    @a.name
+                </td>
+                <td>
+                    @a.count
+                </td>
+                <td>
+
+                </td>
+            </tr>
+       }
+    }
+</table>

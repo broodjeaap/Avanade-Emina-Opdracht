@@ -329,3 +329,8 @@ tr:hover
 .float-right {
     float: right;
 }
+
+.darkerRow 
+{
+    background-color: #EADF7C;
+}

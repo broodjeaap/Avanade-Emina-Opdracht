@@ -32,6 +32,9 @@
         <th>
             Mailing
         </th>
+        <th>
+            Results
+        </th>
     </tr>
     @foreach (var e in Model)
     {
@@ -56,6 +59,9 @@
             </td>
             <td>
                 @Html.ActionLink("Mailing", "Index", "Mailing", new { EnqueteID = e.EnqueteID }, new { })
+            </td>
+            <td>
+                @Html.ActionLink("Results", "Index", "Result", new { EnqueteID = e.EnqueteID }, new { })
             </td>
         </tr>
     }
