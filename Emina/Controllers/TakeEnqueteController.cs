@@ -114,7 +114,7 @@ namespace Emina.Controllers
                         }
                     }
                     var nextQ = db.Questions.Find(pa.NextQuestionID); //entity framework \o/
-                    if (nextQ.QuestionID == currentQ.QuestionID)
+                    if (nextQ.QuestionID == currentQ.QuestionID) //:(
                     {
                         if (nextQ != null)
                         {

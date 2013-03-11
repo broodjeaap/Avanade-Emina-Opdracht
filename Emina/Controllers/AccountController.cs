@@ -2,6 +2,7 @@
 using Emina.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -13,6 +14,24 @@ namespace Emina.Controllers
     [Authorize]
     public class AccountController : Controller
     {
+        private EminaContext db = new EminaContext();
+
+        public ActionResult Index()
+        {
+            return View(db.Users.Find(WebSecurity.CurrentUserId));
+        }
+
+        [HttpPost]
+        public ActionResult Index(User u)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Entry(u).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            return RedirectToAction("Index");
+        }
+
         [AllowAnonymous]
         public ActionResult Login()
         {
